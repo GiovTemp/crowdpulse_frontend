@@ -19,7 +19,7 @@ class SearchFilters extends React.Component {
   
 
 
-    axios.get('https://crowdpulse-beta.herokuapp.com/tweet/getTags', {
+    axios.get('/tweet/getTags', {
       params: {
         db: this.props.db
       }
@@ -68,7 +68,7 @@ class SearchFilters extends React.Component {
 
   componentDidUpdate(prevProps) {
     if(prevProps.db!==this.props.db){
-      axios.get('https://crowdpulse-beta.herokuapp.com/tweet/getTags', {
+      axios.get('/tweet/getTags', {
         params: {
           db: this.props.db
         }

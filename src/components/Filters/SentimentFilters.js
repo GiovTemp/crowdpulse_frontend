@@ -37,7 +37,7 @@ class Filters extends React.Component{
     getSentimentData = (db) => {
 
       //TODO selezione db
-        axios.get('https://crowdpulse-beta.herokuapp.com/tweet/getAnalyzedData', {
+        axios.get('/tweet/getAnalyzedData', {
           params: {
             db: db
           }

@@ -19,7 +19,7 @@ class SearchText extends React.Component {
   
 
 
-    axios.get('https://crowdpulse-beta.herokuapp.com/tweet/getText',{
+    axios.get('/tweet/getText',{
       params: {
         db: this.props.db
       }
@@ -62,7 +62,7 @@ class SearchText extends React.Component {
 
   componentDidUpdate(prevProps) {
     if(prevProps.db!==this.props.db){
-      axios.get('https://crowdpulse-beta.herokuapp.com/tweet/getText',{
+      axios.get('/tweet/getText',{
         params: {
           db: this.props.db
         }

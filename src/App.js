@@ -1,11 +1,13 @@
 import './style.css';
-import './script.js'
+import './script.js';
+import axios from 'axios';
 import SentimentCharts from './components/SentimentCharts';
 import TweetList from './components/TweetList';
 import WordCloud from './components/WordCloud';
 import TimeLines from './components/TimeLines';
 import Maps from './components/Maps';
 import Home from './components/Home';
+import Collection from './components/Collection';
 import { jsPDF } from "jspdf";
 import  html2canvas  from 'html2canvas';
 
@@ -14,17 +16,42 @@ import React from 'react';
 
 class App extends React.Component {
 
-  
-
   state = {
     content:0,
-    db_selected:"aTweets"  };
+    db_selected:"aTweets",
+    collections:[],  };
+  constructor(props){
+    super(props)
+    this.getData()
+ 
     
-  handleDbChange = (db) => {
-    this.setState({db_selected:db})
-
-    //autorefresh 
   }
+
+  getData = () => {
+   
+    //TODO selezione db
+      axios.get('/tweet/collections', {
+        
+      })
+      .then((response) => {
+        var i =0;
+        while(i<response.data.length){
+          this.state.collections.push(response.data[i].name);
+          i++;
+        }
+        console.log(this.state.collections);
+
+    })
+    .catch((error) => {
+      
+        console.log('error: ', error)
+    });
+  
+    }
+
+
+    
+
 
   displaySentimentCharts = () => {
     this.setState({content:1})
@@ -101,7 +128,9 @@ class App extends React.Component {
 
 
   render() {
+
     const renderContent = () => {
+      console.log(this.state.collections)
       switch(this.state.content){
         case(0):
         return <Home db={this.state.db_selected}/>;
@@ -196,15 +225,9 @@ class App extends React.Component {
                         </span>
                     </a>
                     <ul class="cat-sub-menu">
-                        <li>
-                            <a href="#" onClick={() => {this.handleDbChange("aTweets")}}>aTweets</a>
-                        </li>
-                        <li>
-                            <a href="##" onClick={() => {this.handleDbChange("Renzi")}}>Renzi</a>
-                        </li>
-                        <li>
-                            <a href="##" onClick={() => {this.handleDbChange("CentoTweet")}}>Cento Tweet</a>
-                        </li>
+                      <Collection data={this.state.collections}/>
+
+
                     </ul>
                 </li>
                   
@@ -227,8 +250,12 @@ class App extends React.Component {
               </ul>
             </div>
           </aside>
+
+
+
           {/*<PreLoader />*/}
           {renderContent()}
+
         
 
         </div>

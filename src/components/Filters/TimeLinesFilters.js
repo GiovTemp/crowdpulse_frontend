@@ -38,7 +38,7 @@ class Filters extends React.Component{
     getData = (db) => {
 
         //TODO selezione db
-          axios.get('https://crowdpulse-beta.herokuapp.com/tweet/getDataSortByDate',{
+          axios.get('/tweet/getDataSortByDate',{
             params: {
               db: db
             }
