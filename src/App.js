@@ -35,11 +35,12 @@ class App extends React.Component {
       })
       .then((response) => {
         var i =0;
+        var collections = [];
         while(i<response.data.length){
-          this.state.collections.push(response.data[i].name);
+          collections.push(response.data[i].name);
           i++;
         }
-        console.log(this.state.collections);
+        this.setState({collections:collections})
 
     })
     .catch((error) => {
@@ -71,6 +72,10 @@ class App extends React.Component {
 
   displayMaps = () => {
     this.setState({content:5})
+  }
+  
+  handleDbChange = (db) => {
+    this.setState({db_selected:db});
   }
 
   export = () => {
@@ -108,18 +113,25 @@ class App extends React.Component {
         doc.save("timeLines.pdf");
         break;
       case(4):
-        return <TweetList db={this.state.db_selected}/>;
+        
+        const tabella = document.getElementById('tabella');
+        const pdf = new jsPDF('landscape');
+        pdf.html(tabella,{ html2canvas: { scale: 0.2 } }).then(() => {
+          pdf.save("tabella.pdf");
+        }).catch((error) => {
+      
+          console.log('error: ', error)
+      });
       case(5): 
       //bug
-
-      doc = new jsPDF('landscape') 
-      var input = document.getElementById('mapCanvas');
-      html2canvas(input).then((canvas) => {
-        const imgData = canvas.toDataURL('image/jpg');
-        doc.addImage(imgData, 'JPG', 0,0);
-        doc.save("map.pdf");
-      })
-    ;
+      const mappa = document.getElementById('mapCanvas');
+      const pdfMappa = new jsPDF('landscape');
+      pdfMappa.html(mappa,{ html2canvas: { scale: 0.2 } }).then(() => {
+        pdfMappa.save("mappa.pdf");
+      }).catch((error) => {
+    
+        console.log('error: ', error)
+    });
     }
 
   }
@@ -130,7 +142,8 @@ class App extends React.Component {
   render() {
 
     const renderContent = () => {
-      console.log(this.state.collections)
+      
+      
       switch(this.state.content){
         case(0):
         return <Home db={this.state.db_selected}/>;
@@ -224,11 +237,11 @@ class App extends React.Component {
                             <span class="icon arrow-down" aria-hidden="true"></span>
                         </span>
                     </a>
-                    <ul class="cat-sub-menu">
-                      <Collection data={this.state.collections}/>
+                  
+                      <Collection data={this.state.collections} parentCallback = {this.handleDbChange.bind(this)}/>
 
 
-                    </ul>
+                   
                 </li>
                   
                 </ul>

@@ -39,7 +39,7 @@ const Table = ({ data, rowsPerPage }) => {
   
   return (
     <>
-      <table className="table">
+      <table className="table" id="tabella">
         <thead className="tableRowHeader">
           <tr>
             <th className="tableHeader">Username</th>

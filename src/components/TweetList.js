@@ -46,7 +46,7 @@ class TweetList extends React.Component {
 
         </div>
         }else{
-          body=            <div className="row">
+          body= <div className="row">
           <div className="col-lg-12">
           <div className="chart"> <PreLoader/></div>
         </div>
