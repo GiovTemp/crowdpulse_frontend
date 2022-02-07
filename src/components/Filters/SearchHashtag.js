@@ -35,12 +35,12 @@ class SearchHashtag extends React.Component {
           while(i<data.length){
             
             j=0
-            if(data[i].hashtags!==undefined){
-              while(j<data[i].hashtags.length){     
+            if(data[i]._id.hashtags!==undefined){
+              while(j<data[i]._id.hashtags.length){     
                 tempSuggestion.push(
                   {
                     id:0,
-                    name: data[i].hashtags[j]
+                    name: data[i]._id.hashtags[j]
                   }
                 )
                 //console.log(tempSuggestion)
@@ -84,8 +84,8 @@ class SearchHashtag extends React.Component {
             while(i<data.length){
               
               j=0
-              if(data[i].hashtags!==undefined){
-                while(j<data[i].hashtags.length){     
+              if(data[i]._id.hashtags!==undefined){
+                while(j<data[i]._id.hashtags.length){     
                   tempSuggestion.push(
                     {
                       id:0,

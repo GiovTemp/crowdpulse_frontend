@@ -29,12 +29,12 @@ class SearchText extends React.Component {
           var j = 0
 
           const data = response.data
-          var temp =data[0].processed_text[0].split(" ")
+          var temp =data[0]._id.processed_text[0].split(" ")
           var tempSuggestion = []
           while(i<data.length){
             j=0
-            while(j<data[i].processed_text.length){
-              temp=data[i].processed_text[j].split(" ")
+            while(j<data[i]._id.processed_text.length){
+              temp=data[i]._id.processed_text[j].split(" ")
               tempSuggestion.push({
                 id:0,
                 name: temp[0]              
@@ -72,12 +72,12 @@ class SearchText extends React.Component {
             var j = 0
   
             const data = response.data
-            var temp =data[0].processed_text[0].split(" ")
+            var temp =data[0]._id.processed_text[0].split(" ")
             var tempSuggestion = []
             while(i<data.length){
               j=0
-              while(j<data[i].processed_text.length){
-                temp=data[i].processed_text[j].split(" ")
+              while(j<data[i]._id.processed_text.length){
+                temp=data[i]._id.processed_text[j].split(" ")
                 tempSuggestion.push({
                   id:0,
                   name: temp[0]              

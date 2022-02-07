@@ -32,12 +32,12 @@ class SearchFilters extends React.Component {
              
           var temp 
           var tempSuggestion = []
-          
+
           while(i<data.length){
             j=0
-            if(data[i].tag_me!==undefined){
-              while(j<data[i].tag_me.length){
-                temp=data[i].tag_me[j].split(" : ")
+            if(data[i]._id.tag_me!==undefined){
+              while(j<data[i]._id.tag_me.length){
+                temp=data[i]._id.tag_me[j].split(" : ")
                 
                 tempSuggestion[k] = {
                   id:temp[1],
@@ -84,9 +84,9 @@ class SearchFilters extends React.Component {
             
             while(i<data.length){
               j=0
-              if(data[i].tag_me!==undefined){
-                while(j<data[i].tag_me.length){
-                  temp=data[i].tag_me[j].split(" : ")
+              if(data[i]._id.tag_me!==undefined){
+                while(j<data[i]._id.tag_me.length){
+                  temp=data[i]._id.tag_me[j].split(" : ")
                   
                   tempSuggestion[k] = {
                     id:temp[1],
