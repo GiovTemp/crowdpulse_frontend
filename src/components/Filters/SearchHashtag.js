@@ -31,7 +31,7 @@ class SearchHashtag extends React.Component {
           const data = response.data
          
           var tempSuggestion = []
-        
+          //console.log("hashtags"+data[0])
           while(i<data.length){
             
             j=0
@@ -89,7 +89,7 @@ class SearchHashtag extends React.Component {
                   tempSuggestion.push(
                     {
                       id:0,
-                      name: data[i].hashtags[j]
+                      name: data[i]._id.hashtags[j]
                     }
                   )
                   //console.log(tempSuggestion)

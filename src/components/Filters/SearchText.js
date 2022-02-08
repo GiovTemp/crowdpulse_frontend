@@ -25,22 +25,30 @@ class SearchText extends React.Component {
       }
     })
         .then((response) => {
-          var i = 0
+          var i = 1
           var j = 0
-
+          var temp;
           const data = response.data
-          var temp =data[0]._id.processed_text[0].split(" ")
+          //var temp =data[0]._id.processed_text[0].split(" ")
+          
           var tempSuggestion = []
+          console.log(data.length)
           while(i<data.length){
             j=0
+            
+            if(data[i]._id!==undefined&&data[i]._id!==null){
+             
             while(j<data[i]._id.processed_text.length){
+              
               temp=data[i]._id.processed_text[j].split(" ")
+             
               tempSuggestion.push({
                 id:0,
-                name: temp[0]              
+                name: temp[0]      
               })
               j++
             }
+          }
 
               i++
           }
@@ -70,20 +78,23 @@ class SearchText extends React.Component {
           .then((response) => {
             var i = 0
             var j = 0
-  
+            var temp;
             const data = response.data
-            var temp =data[0]._id.processed_text[0].split(" ")
+            //var temp =data[0]._id.processed_text[0].split(" ")
             var tempSuggestion = []
             while(i<data.length){
               j=0
+              if(data[i]._id!==undefined&&data[i]._id!==null){
               while(j<data[i]._id.processed_text.length){
                 temp=data[i]._id.processed_text[j].split(" ")
+                
                 tempSuggestion.push({
                   id:0,
                   name: temp[0]              
                 })
                 j++
               }
+            }
   
                 i++
             }
