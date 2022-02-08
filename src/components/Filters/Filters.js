@@ -37,6 +37,7 @@ class Filters extends React.Component{
 
     getData = (db) => {
  
+      
       //TODO selezione db
         axios.get('/tweet/getAnalyzedData', {
           params: {

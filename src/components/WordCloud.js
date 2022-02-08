@@ -49,9 +49,12 @@ handleQuery = (data) => {
         var arrayWords = []
 
         var flag = false
+
         
+
+       
         while(i<this.state.data.length){
-          j=0
+          j=0;
          
           if(this.state.data[i].spacy!==undefined){
             while(j<this.state.data[i].spacy.processed_text.length){
@@ -90,9 +93,9 @@ handleQuery = (data) => {
          i++
          
         }
-        this.state.words=words
-        this.setState({words:words})
-
+        this.state.words=words.slice(0,200)
+        this.setState({words:words.slice(0,200)})
+        console.log(this.state.words.length)
         this.setState({flag:1})
 
       }
@@ -137,7 +140,7 @@ handleQuery = (data) => {
             <div className="chart" id="wordChart">
             <ReactWordcloud words={this.state.words}       options={{
         fontFamily: 'monospace',
-        fontSizes: [20, 50],
+        fontSizes: [10, 50],
       }} />
             </div>
           </div>

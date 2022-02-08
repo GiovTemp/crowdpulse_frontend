@@ -25,10 +25,11 @@ class SearchHashtag extends React.Component {
       }
     })
         .then((response) => {
-          var i = 0
-          var j = 0
-          var k =0
-          const data = response.data
+          var i = 0;
+          var j = 0;
+          var k =0;
+          const data = response.data;
+          var strings = [];
          
           var tempSuggestion = []
           //console.log("hashtags"+data[0])
@@ -36,13 +37,17 @@ class SearchHashtag extends React.Component {
             
             j=0
             if(data[i]._id.hashtags!==undefined){
-              while(j<data[i]._id.hashtags.length){     
-                tempSuggestion.push(
-                  {
-                    id:0,
-                    name: data[i]._id.hashtags[j]
-                  }
-                )
+              while(j<data[i]._id.hashtags.length){ 
+                if(strings.indexOf(data[i]._id.hashtags[j])==-1){
+                  tempSuggestion.push(
+                    {
+                      id:0,
+                      name: data[i]._id.hashtags[j]
+                    }
+                  )
+                  strings.push(data[i]._id.hashtags[j]);
+                }    
+
                 //console.log(tempSuggestion)
                 j++
               }
@@ -80,18 +85,22 @@ class SearchHashtag extends React.Component {
             const data = response.data
            
             var tempSuggestion = []
+            var strings = []
           
             while(i<data.length){
               
               j=0
               if(data[i]._id.hashtags!==undefined){
-                while(j<data[i]._id.hashtags.length){     
-                  tempSuggestion.push(
-                    {
-                      id:0,
-                      name: data[i]._id.hashtags[j]
-                    }
-                  )
+                while(j<data[i]._id.hashtags.length){  
+                  if(strings.indexOf(data[i]._id.hashtags[j])==-1){
+                    tempSuggestion.push(
+                      {
+                        id:0,
+                        name: data[i]._id.hashtags[j]
+                      }
+                    )
+                    strings.push(data[i]._id.hashtags[j]);
+                  }    
                   //console.log(tempSuggestion)
                   j++
                 }

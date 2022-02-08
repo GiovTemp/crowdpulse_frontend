@@ -18,39 +18,47 @@ class SearchFilters extends React.Component {
     }
   
 
-
     axios.get('/tweet/getTags', {
       params: {
         db: this.props.db
       }
     })
         .then((response) => {
-          var i = 0
-          var j = 0
-          var k =0
-          const data = response.data
+          var i = 0;
+          var j = 0;
+          var k =0;
+          const data = response.data;
              
-          var temp 
-          var tempSuggestion = []
-          
-          while(i<data.length){
-            j=0
+          var temp ;
+          var tempSuggestion = [];
+          var strings = [];
+
+
+          while(i<data[i]._id.length){
+            j=0;
             
             if(data[i]._id!==undefined&&data[i]._id!==null){
               
               while(j<data[i]._id.tag_me.length){
                 
                 temp=data[i]._id.tag_me[j].split(" : ")
-                
-                tempSuggestion[k] = {
-                  id:temp[1],
-                  name: temp[0]
+
+                if(strings.indexOf(temp[0])>-1){
+
+                }else{
+                  tempSuggestion[k] = {
+                    id:temp[1],
+                    name: temp[0]
+                  };
+                  strings.push(temp[0])
                 }
-                k++
-                j++
+
+
+                k++;
+                j++;
               }
             }
-              i++
+              i++;  
           }
           
           
@@ -77,29 +85,34 @@ class SearchFilters extends React.Component {
         }
       })
           .then((response) => {
-            var i = 0
-            var j = 0
-            var k =0
-            const data = response.data
+            var i = 0;
+            var j = 0;
+            var k =0;
+            const data = response.data;
                
-            var temp 
-            var tempSuggestion = []
+            var temp ;
+            var tempSuggestion = [];
+            var strings = [];
             
             while(i<data.length){
-              j=0
+              j=0;
               if(data[i]._id!==undefined&&data[i]._id!==null){
                 while(j<data[i]._id.tag_me.length){
                   temp=data[i]._id.tag_me[j].split(" : ")
                   
-                  tempSuggestion[k] = {
-                    id:temp[1],
-                    name: temp[0]
+                  if(strings.indexOf(temp[0])==-1){
+                    tempSuggestion[k] = {
+                      id:temp[1],
+                      name: temp[0]
+                    }
+                    strings.push(temp[0]);
                   }
-                  k++
-                  j++
+  
+                  k++;
+                  j++;
                 }
               }
-                i++
+                i++;
             }
             
             
