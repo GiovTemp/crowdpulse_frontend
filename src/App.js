@@ -8,6 +8,7 @@ import TimeLines from './components/TimeLines';
 import Maps from './components/Maps';
 import Home from './components/Home';
 import Collection from './components/Collection';
+import Dbs from './components/Dbs';
 import { jsPDF } from "jspdf";
 import  html2canvas  from 'html2canvas';
 
@@ -18,8 +19,10 @@ class App extends React.Component {
 
   state = {
     content:0,
-    db_selected:"aTweets",
-    collections:[],  };
+    db_selected:"",
+    mongodb_selected:"",
+    collections:[],
+    dbs:[]  };
   constructor(props){
     super(props)
     this.getData()
@@ -30,24 +33,27 @@ class App extends React.Component {
   getData = () => {
    
     //TODO selezione db
-      axios.get('/tweet/collections', {
-        
-      })
-      .then((response) => {
-        var i =0;
-        var collections = [];
-        while(i<response.data.length){
-          collections.push(response.data[i].name);
-          i++;
-        }
-        this.setState({collections:collections})
 
+
+    axios.get('/tweet/dbs', {
+        
     })
-    .catch((error) => {
+    .then((response) => {
+      var i =0;
+      var dbs = [];
       
-        console.log('error: ', error)
-    });
-  
+      while(i<response.data.databases.length){
+        dbs.push(response.data.databases[i].name);
+        i++;
+      }
+      this.setState({dbs:dbs})
+
+  })
+  .catch((error) => {
+    
+      console.log('error: ', error)
+  });
+       
     }
 
 
@@ -77,6 +83,41 @@ class App extends React.Component {
   handleDbChange = (db) => {
     this.setState({db_selected:db});
   }
+
+  handleMongoDbChange = (mongodb) => {
+    this.setState({mongodb_selected:mongodb});
+    axios.get('/tweet/setDbs', {
+      params: {
+        mongodb: mongodb
+      }        
+    }).catch((error) => {
+    
+      console.log('error: ', error)
+  });
+    this.getCollection();
+  }
+
+  getCollection = () => {
+    axios.get('/tweet/collections', {
+        
+    })
+    .then((response) => {
+      var i =0;
+      var collections = [];
+      while(i<response.data.length){
+        collections.push(response.data[i].name);
+        i++;
+      }
+      this.setState({collections:collections})
+
+  })
+  .catch((error) => {
+    
+      console.log('error: ', error)
+  });
+  }
+
+
 
   export = () => {
     var doc;
@@ -228,9 +269,9 @@ class App extends React.Component {
                     </ul>
                 </li>
 
-
+                
                 <li>
-                    <a class="show-cat-btn" href="##">
+                    <a class="show-cat-btn" href="###">
                         <span class="icon folder" aria-hidden="true"></span>Database
                         <span class="category__btn transparent-btn" title="Open list">
                             <span class="sr-only">Open list</span>
@@ -238,8 +279,23 @@ class App extends React.Component {
                         </span>
                     </a>
                   
-                      <Collection data={this.state.collections} parentCallback = {this.handleDbChange.bind(this)}/>
+                      <Dbs data={this.state.dbs} parentCallback = {this.handleMongoDbChange.bind(this)}/>
 
+
+                   
+                </li>
+
+
+                <li>
+                    <a class="show-cat-btn" href="##">
+                        <span class="icon folder" aria-hidden="true"></span>Collections
+                        <span class="category__btn transparent-btn" title="Open list">
+                            <span class="sr-only">Open list</span>
+                            <span class="icon arrow-down" aria-hidden="true"></span>
+                        </span>
+                    </a>
+                  
+                      <Collection data={this.state.collections} parentCallback = {this.handleDbChange.bind(this)}/>
 
                    
                 </li>
