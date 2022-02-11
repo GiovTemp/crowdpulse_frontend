@@ -5,6 +5,8 @@ import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import PreLoader from "./preloader";
 
+ 
+
 
 class Maps extends React.Component {
   constructor(props){
@@ -39,11 +41,13 @@ class Maps extends React.Component {
         var i = 0
        
         var markers = []
-
+        
         
         while(i<this.state.data.length){
           if(this.state.data[i].geo!==undefined){
             
+            console.log(this.state.data[i].geo)
+
             if(this.state.data[i].geo.coordinates!==undefined){
 
               markers.push({
@@ -53,6 +57,9 @@ class Maps extends React.Component {
                 author:this.state.data[i].author_username
               })
              
+            }else{
+              //trasformare luoghi in coordinate
+
             }
             
             i++
@@ -63,6 +70,8 @@ class Maps extends React.Component {
         
         this.setState({markers:markers})
         this.state.markers=markers
+
+      
 
         
         
@@ -80,6 +89,7 @@ class Maps extends React.Component {
              {this.state.markers.map((city, idx) => (
              <Marker
                position={[city.lat, city.lng]}
+               city = "Rome"
                key={idx}
              >
                <Popup>
