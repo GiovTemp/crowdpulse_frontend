@@ -43,7 +43,11 @@ class App extends React.Component {
       var dbs = [];
       
       while(i<response.data.databases.length){
-        dbs.push(response.data.databases[i].name);
+        if(response.data.databases[i].name!=='admin'&&response.data.databases[i].name!=='config'
+        &&response.data.databases[i].name!=='test'&&response.data.databases[i].name!=='local'){
+            dbs.push(response.data.databases[i].name);
+        }
+        
         i++;
       }
       this.setState({dbs:dbs})
@@ -104,7 +108,9 @@ class App extends React.Component {
       var i =0;
       var collections = [];
       while(i<response.data.length){
-        collections.push(response.data[i].name);
+        
+          collections.push(response.data[i].name);
+               
         i++;
       }
       this.state.collections = collections;
