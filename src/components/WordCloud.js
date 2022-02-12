@@ -161,7 +161,7 @@ handleQuery = (data) => {
           <div className="container">
             <h1>CrowdPulse</h1>
             <br/>
-            <h3>Word Cloud - {this.props.db} </h3>
+            <h3>Word Cloud - {this.props.mongodb} </h3>
             <br/>
             <Filters parentCallback = {this.handleQuery.bind(this)} db = {this.props.db}/>
             <br/>

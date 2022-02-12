@@ -15,7 +15,7 @@ class Home extends React.Component {
           <div className="container">
             <h1 className="homeTitle">CrowdPulse Dashboard</h1>
             <br/><br/><br/><br/><br/><br/><br/>
-            <h3>Hai selezionato  il db : {this.props.db} </h3><br/><br/><br/>
+            <h3>Hai selezionato  il db : {this.props.mongodb} </h3><br/><br/><br/>
             <div className="row">
 
                 <div className="col-lg-4 howBox">

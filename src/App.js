@@ -90,8 +90,7 @@ class App extends React.Component {
       params: {
         mongodb: mongodb
       }        
-    }).catch((error) => {
-    
+    }).catch((error) => {    
       console.log('error: ', error)
   });
     this.getCollection();
@@ -108,13 +107,16 @@ class App extends React.Component {
         collections.push(response.data[i].name);
         i++;
       }
-      this.setState({collections:collections})
+      this.state.collections = collections;
+      this.state.db_selected = collections[0];
+      this.setState({collections:collections});
 
   })
   .catch((error) => {
     
       console.log('error: ', error)
   });
+
   }
 
 
@@ -187,17 +189,17 @@ class App extends React.Component {
       
       switch(this.state.content){
         case(0):
-        return <Home db={this.state.db_selected}/>;
+        return <Home db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
         case(1): 
-          return <SentimentCharts db={this.state.db_selected}/>;
+          return <SentimentCharts db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
         case(2): 
-          return <WordCloud db={this.state.db_selected}/>;
+          return <WordCloud db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
         case(3): 
-          return <TimeLines db={this.state.db_selected}/>;
+          return <TimeLines db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
         case(4):
-          return <TweetList db={this.state.db_selected}/>;
+          return <TweetList db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
         case(5): 
-          return <Maps db={this.state.db_selected}/>;
+          return <Maps db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
       }
     }
 

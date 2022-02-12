@@ -5,11 +5,11 @@ class Dbs extends React.Component {
     constructor(props){
         super(props)
         this.handleMongoDbChange = this.handleMongoDbChange.bind(this)
-        console.log(props.data)
+
         }
 
     handleMongoDbChange = (db) => {
-        
+
         this.props.parentCallback(db);  
             
       }
