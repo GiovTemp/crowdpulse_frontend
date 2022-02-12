@@ -118,7 +118,9 @@ class App extends React.Component {
         i++;
       }
       this.state.collections = collections;
-      this.state.db_selected = 'Message';
+      
+      this.setState({db_selected:null});
+      this.setState({db_selected:'Message'});
       this.setState({collections:collections});
 
   })
