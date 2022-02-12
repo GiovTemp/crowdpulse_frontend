@@ -86,14 +86,19 @@ class App extends React.Component {
   
   handleDbChange = (db) => {
     this.setState({db_selected:db});
+    
   }
 
   handleMongoDbChange = (mongodb) => {
+   
     this.setState({mongodb_selected:mongodb});
     axios.get('/tweet/setDbs', {
       params: {
         mongodb: mongodb
       }        
+    }).then(() => {
+      
+
     }).catch((error) => {    
       console.log('error: ', error)
   });
