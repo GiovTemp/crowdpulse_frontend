@@ -96,9 +96,8 @@ class App extends React.Component {
       params: {
         mongodb: mongodb
       }        
-    }).then(() => {
+    }).then((response) => {
       
-
     }).catch((error) => {    
       console.log('error: ', error)
   });
@@ -119,7 +118,7 @@ class App extends React.Component {
         i++;
       }
       this.state.collections = collections;
-      this.state.db_selected = collections[0];
+      this.state.db_selected = 'Message';
       this.setState({collections:collections});
 
   })
