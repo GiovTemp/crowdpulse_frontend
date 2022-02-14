@@ -9,6 +9,7 @@ import Maps from './components/Maps';
 import Home from './components/Home';
 import Collection from './components/Collection';
 import Dbs from './components/Dbs';
+import LoadingData from './components/LoadingData';
 import { jsPDF } from "jspdf";
 import  html2canvas  from 'html2canvas';
 
@@ -102,6 +103,7 @@ class App extends React.Component {
       console.log('error: ', error)
   });
     this.getCollection();
+    this.setState({content:6}); //set loading screen
   }
 
   getCollection = () => {
@@ -212,6 +214,8 @@ class App extends React.Component {
           return <TweetList db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
         case(5): 
           return <Maps db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
+        case(6):
+          return <LoadingData db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
       }
     }
 
