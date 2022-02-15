@@ -34,7 +34,7 @@ componentDidUpdate(prevProps) {
       
       this.setState({counter:counter})
       this.state.counter = counter
-
+      
       this.setState({dataGroupByDates:dataGroupByDates})
       this.state.dataGroupByDates = dataGroupByDates
       this.setState({flag:1})
@@ -98,7 +98,7 @@ componentDidUpdate(prevProps) {
             <br/>
             <h3>Sentiment - {this.props.mongodb} </h3>
             <br/>
-            <Filters parentCallback = {this.handleQuery.bind(this)} db={this.props.db}/>
+            <Filters parentCallback = {this.handleQuery.bind(this)} db={this.props.db} tweetsData={this.props.allTweetsData}/>
             <br/>
               {body}
           </div>

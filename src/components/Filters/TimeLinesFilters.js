@@ -25,36 +25,24 @@ class Filters extends React.Component{
 
       }
      
-      this.getData(this.props.db)
+      this.getData(this.props.tweetsData.dataSortByDate.data)
     }
 
     componentDidUpdate(prevProps) {
-      if(prevProps.db!==this.props.db){
-        this.getData(this.props.db)
+      if(prevProps.mongodb!==this.props.mongodb){
+        this.getData(this.props.tweetsData.dataSortByDate.data)
       }
       
     }
    
-    getData = (db) => {
+    getData = (allData) => {
 
-        //TODO selezione db
-          axios.get('/tweet/getDataSortByDate',{
-            params: {
-              db: db
-            }
-          })
-          .then((response) => {
-            const data = response.data;
-            this.setState({data : data})
-            this.setState({oldData : data})
-            this.setState({totalTweets : data.length})
+            const data = allData
+            this.state.data = allData;
+            this.state.oldData = allData;
+            this.state.totalTweets = this.props.tweetsData.dataSortByDate.data.length;
             this.query()
-  
-        })
-        .catch((error) => {
-            console.log('error: ', error)
-        });
-      
+              
         }
 
       //DATES FILTERS
@@ -451,7 +439,7 @@ handleText = (text) => {
               <div className="col-md-12 col-xl-12">
                 <div className="stat-cards-info">
                   <center><h4>Tags</h4><br />
-                  <SearchFilters parentCallback = {this.handleTags.bind(this)} db = {this.props.db}/>
+                  <SearchFilters parentCallback = {this.handleTags.bind(this)} db = {this.props.db} allTags = {this.props.tweetsData.dataTags}/>
                     
                   </center>
                 </div>
@@ -470,7 +458,7 @@ handleText = (text) => {
               <div className="col-md-12 col-xl-12">
                 <div className="stat-cards-info">
                   <center><h4>Processed Text</h4><br />
-                  <SearchText parentCallback = {this.handleText.bind(this)} db = {this.props.db}/>
+                  <SearchText parentCallback = {this.handleText.bind(this)} db = {this.props.db}  allText = {this.props.tweetsData.dataText}/>
                     
                   </center>
                 </div>
@@ -489,7 +477,7 @@ handleText = (text) => {
               <div className="col-md-12 col-xl-12">
                 <div className="stat-cards-info">
                   <center><h4>Hashtags</h4><br />
-                  <SearchHashtag parentCallback = {this.handleHashtags.bind(this)} db = {this.props.db}/>
+                  <SearchHashtag parentCallback = {this.handleHashtags.bind(this)} db = {this.props.db} allHashtags = {this.props.tweetsData.dataHashtags}/>
                     
                   </center>
                 </div>

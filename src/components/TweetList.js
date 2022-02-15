@@ -27,6 +27,7 @@ class TweetList extends React.Component {
       this.setState({data:data})
       this.state.data = data
       this.state.totalTweets = data.length
+      
       this.setState({flag:1})
     
     }
@@ -61,7 +62,7 @@ class TweetList extends React.Component {
             <br/>
             <h3>Tweet List - {this.props.mongodb} </h3>
             <br/>
-            <Filters parentCallback = {this.handleQuery.bind(this)} db= {this.props.db} />
+            <Filters parentCallback = {this.handleQuery.bind(this)} db= {this.props.db} tweetsData={this.props.allTweetsData} />
             <br/>
 
             {body}

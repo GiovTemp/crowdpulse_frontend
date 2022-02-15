@@ -17,112 +17,58 @@ class SearchText extends React.Component {
       ]
     }
   
+    this.getText();
 
+  }
 
-    axios.get('/tweet/getText',{
-      params: {
-        db: this.props.db
-      }
-    })
-        .then((response) => {
-          var i = 1;
-          var j = 0;
-          var temp;
-          var strings = [];
-          const data = response.data
-          //var temp =data[0]._id.processed_text[0].split(" ")
-          
-          var tempSuggestion = []
-       
-          while(i<data.length){
-            j=0;
-            
-            if(data[i]._id!==undefined&&data[i]._id!==null){
-             
-            while(j<data[i]._id.processed_text.length){
-              
-              temp=data[i]._id.processed_text[j].split(" ")
-
-              if(strings.indexOf(temp[0])==-1){
-                tempSuggestion.push({
-                  id:0,
-                  name: temp[0]      
-                });
-                strings.push(temp[0]);
-              }
-
-
-              j++;
-            }
-          }
-
-              i++;
-          }
-          
-         
-
-          this.setState({suggestions: tempSuggestion})
-         
-           
-      })
-      .catch((error) => {
-          console.log('error: ', error)
-      });
+  getText = () => {
+    var i = 1;
+    var j = 0;
+    var temp;
+    var strings = [];
+    const data = this.props.allText.data;
+    //var temp =data[0]._id.processed_text[0].split(" ")
     
+    var tempSuggestion = []
+ 
+    while(i<data.length){
+      j=0;
       
+      if(data[i]._id!==undefined&&data[i]._id!==null){
+       
+      while(j<data[i]._id.processed_text.length){
+        
+        temp=data[i]._id.processed_text[j].split(" ")
 
-    this.reactTags = React.createRef()
+        if(strings.indexOf(temp[0])==-1){
+          tempSuggestion.push({
+            id:0,
+            name: temp[0]      
+          });
+          strings.push(temp[0]);
+        }
+
+
+        j++;
+      }
+    }
+
+        i++;
+    }
+    
+   
+    this.state.suggestions = tempSuggestion
+    this.setState({suggestions: tempSuggestion})        
+           
+
+this.reactTags = React.createRef()
   }
 
   componentDidUpdate(prevProps) {
-    if(prevProps.db!==this.props.db){
-      axios.get('/tweet/getText',{
-        params: {
-          db: this.props.db
-        }
-      })
-          .then((response) => {
-            var i = 0;
-            var j = 0;
-            var temp;
-            const data = response.data;
-            //var temp =data[0]._id.processed_text[0].split(" ")
-            var tempSuggestion = [];
-            var strings = [];
-            while(i<data.length){
-              j=0
-              if(data[i]._id!==undefined&&data[i]._id!==null){
-              while(j<data[i]._id.processed_text.length){
-                temp=data[i]._id.processed_text[j].split(" ")
-                
-                if(strings.indexOf(temp[0])==-1){
-                  tempSuggestion.push({
-                    id:0,
-                    name: temp[0]      
-                  });
-                  strings.push(temp[0]);
-                }
-                j++
-              }
-            }
-  
-                i++
-            }
-            
-           
-  
-            this.setState({suggestions: tempSuggestion})
-           
-             
-        })
-        .catch((error) => {
-            console.log('error: ', error)
-        });
-      
-        
-  
-      this.reactTags = React.createRef()
+    if(prevProps.mongodb!==this.props.mongodb){
+      this.getText();
     }
+    
   }
 
   sendData = (text) =>{

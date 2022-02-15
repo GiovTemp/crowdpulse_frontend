@@ -103,7 +103,7 @@ class TweetList extends React.Component {
             <br/>
             <h3>Time Line - {this.props.mongodb} </h3>
             <br/>
-           <Filters  parentCallback = {this.handleQuery.bind(this)} db={this.props.db} /> 
+           <Filters  parentCallback = {this.handleQuery.bind(this)} db={this.props.db} tweetsData={this.props.allTweetsData} /> 
             <br/>
             {body}
 

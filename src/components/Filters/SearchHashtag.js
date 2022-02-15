@@ -16,116 +16,58 @@ class SearchHashtag extends React.Component {
        
       ]
     }
-  
-
-
-    axios.get('/tweet/getHashtags',{
-      params: {
-        db: this.props.db
-      }
-    })
-        .then((response) => {
-          var i = 0;
-          var j = 0;
-          var k =0;
-          const data = response.data;
-          var strings = [];
-         
-          var tempSuggestion = []
-          //console.log("hashtags"+data[0])
-          while(i<data.length){
-            
-            j=0
-            if(data[i]._id.hashtags!==undefined){
-              while(j<data[i]._id.hashtags.length){ 
-                if(strings.indexOf(data[i]._id.hashtags[j])==-1){
-                  tempSuggestion.push(
-                    {
-                      id:0,
-                      name: data[i]._id.hashtags[j]
-                    }
-                  )
-                  strings.push(data[i]._id.hashtags[j]);
-                }    
-
-                //console.log(tempSuggestion)
-                j++
-              }
-            }
-
-
-              i++
-          }
-
-          //this.state.suggestions = tempSuggestion
-          this.setState({suggestions: tempSuggestion})
-         
-           
-      })
-      .catch((error) => {
-          console.log('error: ', error)
-      });
-    
-      
-
-    this.reactTags = React.createRef()
+     
+    this.getHashtags();
   }
 
-  componentDidUpdate(prevProps) {
-    if(prevProps.db!==this.props.db){
-      axios.get('/tweet/getHashtags',{
-        params: {
-          db: this.props.db
-        }
-      })
-          .then((response) => {
-            var i = 0
-            var j = 0
-            var k =0
-            const data = response.data
-           
-            var tempSuggestion = []
-            var strings = []
-          
-            while(i<data.length){
-              
-              j=0
-              if(data[i]._id.hashtags!==undefined){
-                while(j<data[i]._id.hashtags.length){  
-                  if(strings.indexOf(data[i]._id.hashtags[j])==-1){
-                    tempSuggestion.push(
-                      {
-                        id:0,
-                        name: data[i]._id.hashtags[j]
-                      }
-                    )
-                    strings.push(data[i]._id.hashtags[j]);
-                  }    
-                  //console.log(tempSuggestion)
-                  j++
-                }
-              }
-  
-  
-                i++
-            }
-  
-            //this.state.suggestions = tempSuggestion
-            this.setState({suggestions: tempSuggestion})
-           
-             
-        })
-        .catch((error) => {
-            console.log('error: ', error)
-        });
+  getHashtags = () => {
+    var i = 0;
+    var j = 0;
+    var k =0;
+    const data = this.props.allHashtags.data;
+    var strings = [];
+   
+    var tempSuggestion = []
+    //console.log("hashtags"+data[0])
+    while(i<data.length){
       
-        
-  
-      this.reactTags = React.createRef()
+      j=0
+      if(data[i]._id.hashtags!==undefined){
+        while(j<data[i]._id.hashtags.length){ 
+          if(strings.indexOf(data[i]._id.hashtags[j])==-1){
+            tempSuggestion.push(
+              {
+                id:0,
+                name: data[i]._id.hashtags[j]
+              }
+            )
+            strings.push(data[i]._id.hashtags[j]);
+          }    
+
+          //console.log(tempSuggestion)
+          j++
+        }
+      }
+
+
+        i++
+    }
+
+    this.state.suggestions = tempSuggestion
+    this.setState({suggestions: tempSuggestion})
+   
+
+this.reactTags = React.createRef()
+  }
+
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.mongodb!==this.props.mongodb){
+      this.getHashtags();
     }
     
   }
-  
+
 
   sendData = (hashtags) =>{
     this.props.parentCallback(hashtags);

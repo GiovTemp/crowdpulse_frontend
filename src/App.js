@@ -23,7 +23,8 @@ class App extends React.Component {
     db_selected:"",
     mongodb_selected:"",
     collections:[],
-    dbs:[]  };
+    dbs:[],
+    allTweetsData:[]  };
   constructor(props){
     super(props)
     this.getData()
@@ -61,6 +62,11 @@ class App extends React.Component {
        
     }
 
+  getAllData = (data) => {
+    this.state.allTweetsData = data;
+    
+  }
+
 
     
 
@@ -87,8 +93,9 @@ class App extends React.Component {
   
   handleDbChange = (db) => {
     this.setState({db_selected:db});
-    
+    this.setState({content:6}); //set loading screen    
   }
+  
 
   handleMongoDbChange = (mongodb) => {
    
@@ -103,7 +110,7 @@ class App extends React.Component {
       console.log('error: ', error)
   });
     this.getCollection();
-    this.setState({content:6}); //set loading screen
+    
   }
 
   getCollection = () => {
@@ -124,6 +131,7 @@ class App extends React.Component {
       this.setState({db_selected:null});
       this.setState({db_selected:'Message'});
       this.setState({collections:collections});
+      this.setState({content:6}); //set loading screen
 
   })
   .catch((error) => {
@@ -203,19 +211,19 @@ class App extends React.Component {
       
       switch(this.state.content){
         case(0):
-        return <Home db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
+        return <Home db={this.state.db_selected} mongodb={this.state.mongodb_selected} />;
         case(1): 
-          return <SentimentCharts db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
+          return <SentimentCharts db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
         case(2): 
-          return <WordCloud db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
+          return <WordCloud db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
         case(3): 
-          return <TimeLines db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
+          return <TimeLines db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
         case(4):
-          return <TweetList db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
+          return <TweetList db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
         case(5): 
-          return <Maps db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
+          return <Maps db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
         case(6):
-          return <LoadingData db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
+          return <LoadingData parentCallback = {this.getAllData.bind(this)} db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
       }
     }
 

@@ -21,7 +21,7 @@ const printTags = (data) =>{
   }
 
   return(
-    tags.map(item=>(<a href={item.link} className="tag">{item.name}</a>))
+    tags.map(item=>(<a href={item.link} target="_blank" className="tag">{item.name}</a>))
    
     )
    }else{

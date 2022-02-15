@@ -23,28 +23,21 @@ class Filters extends React.Component{
             toDate : null,
 
         }
+      
         
-        this.getSentimentData(this.props.db)
+        this.getSentimentData(this.props.tweetsData.dataTweet.data)
     }
 
     componentDidUpdate(prevProps) {
-      if(prevProps.db!==this.props.db){
-        this.getSentimentData(this.props.db)
+      if(prevProps.mongodb!==this.props.mongodb){
+        this.getSentimentData(this.props.tweetsData.dataTweet.data)
       }
       
     }
 
-    getSentimentData = (db) => {
+    getSentimentData = (data) => {
 
-      //TODO selezione db
-        axios.get('/tweet/getAnalyzedData', {
-          params: {
-            db: db
-          }
-        })
-        .then((response) => {
           
-          const data = response.data;
           var negative = 0
           var positive = 0
           var neutral = 0
@@ -90,8 +83,11 @@ class Filters extends React.Component{
     
     
           this.setState({ counter: tempCounter })
+          this.state.counter = tempCounter;
           this.setState({data : data})
+          this.state.data = data;
           this.setState({oldData : data})
+          this.state.oldData = data;
 
           
 
@@ -152,12 +148,8 @@ class Filters extends React.Component{
           this.state.dataGroupByDates=dataGroupByDates     
                       
           this.sendData()
-      })
-      .catch((error) => {
-          console.log('error: ', error)
-      });
-    
-      }
+      }    
+      
     
       //DATES FILTERS
       
@@ -657,6 +649,7 @@ handleQuery = () => {
 
     
       sendData = () =>{
+        
         this.props.parentCallback(this.state.dataGroupByDates,this.state.counter);
       }
       
@@ -672,7 +665,7 @@ handleQuery = () => {
                   <div className="row">
                     <div className="col-md-12">
                       <div className="stat-cards-info">
-                        <center><h4>Category</h4><br />
+                        <center><h4>Algorithm</h4><br />
                           <select id="sel1" onChange={this.handleCategory} >
                             <option value="0">All</option>
                             <option value="1">Sent-it</option>
@@ -744,7 +737,7 @@ handleQuery = () => {
                   <div className="col-md-12 col-xl-12">
                     <div className="stat-cards-info">
                       <center><h4>Tags</h4><br />
-                      <SearchFilters parentCallback = {this.handleTags.bind(this)} db = {this.props.db}/>
+                      <SearchFilters parentCallback = {this.handleTags.bind(this)} db = {this.props.db} allTags = {this.props.tweetsData.dataTags}/>
                         
                       </center>
                     </div>
@@ -763,7 +756,7 @@ handleQuery = () => {
                   <div className="col-md-12 col-xl-12">
                     <div className="stat-cards-info">
                       <center><h4>Processed Text</h4><br />
-                      <SearchText parentCallback = {this.handleText.bind(this)} db = {this.props.db}/>
+                      <SearchText parentCallback = {this.handleText.bind(this)} db = {this.props.db} allText = {this.props.tweetsData.dataText}/>
                         
                       </center>
                     </div>
@@ -782,7 +775,7 @@ handleQuery = () => {
                   <div className="col-md-12 col-xl-12">
                     <div className="stat-cards-info">
                       <center><h4>Hashtags</h4><br />
-                      <SearchHashtag parentCallback = {this.handleHashtags.bind(this)} db = {this.props.db}/>
+                      <SearchHashtag parentCallback = {this.handleHashtags.bind(this)} db = {this.props.db} allHashtags = {this.props.tweetsData.dataHashtags}/>
                         
                       </center>
                     </div>
