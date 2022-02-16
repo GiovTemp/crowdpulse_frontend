@@ -11,7 +11,7 @@ const PieChart = (props) =>{
   
   let total = data2.reduce((accumulator, currentValue) => accumulator + currentValue);
     
-  var labels = data2.map(value => Math.round((value / total) * 100) + '%');
+  var labels = data2.map(value => (value / total * 100).toFixed(2) + '%');
 
   const  data = {
     labels: [
@@ -39,7 +39,7 @@ const PieChart = (props) =>{
           var meta = dataset._meta[Object.keys(dataset._meta)[0]];
           var total = meta.total;
           var currentValue = dataset.data[tooltipItem.index];
-          var percentage = parseFloat((currentValue/total*100).toFixed(1));
+          var percentage = parseFloat((currentValue/total*100).toFixed(2));
           return currentValue + ' (' + percentage + '%)';
         },
         title: function(tooltipItem, data) {

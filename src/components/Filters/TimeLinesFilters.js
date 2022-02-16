@@ -14,6 +14,7 @@ class Filters extends React.Component{
         this.state = {
           totalTweets: 0,
           flagType: 0,
+          flagSentiment : 0,
           counter : [],
           oldData : [],
           data: [],
@@ -376,6 +377,285 @@ handleText = (text) => {
         this.props.parentCallback(this.state.data);
       }
       
+
+      
+            // CATEGORY
+            handleCategory = (event) => {
+
+              if(this.state.flagType!==0 && this.state.flagSentiment!==0){
+                this.state.flagType = event.target.value ;  
+                this.state.data = this.state.oldData;
+                console.log(this.state.data)
+                this.resetFilter();
+                this.filterByCategory();
+              }else if(event.target.value===0 && this.state.flagSentiment===0){
+                
+                this.state.flagType = event.target.value ; 
+                this.state.data = this.state.oldData;
+                this.resetFilter();
+                
+              }else{
+                this.state.flagType = event.target.value ;  
+                this.filterByCategory();     
+              }
+      
+              
+            }
+      
+            handleSentiment = (event) => {
+              if(this.state.flagType!==0 && this.state.flagSentiment!==0){
+                this.state.flagSentiment = event.target.value ; 
+                this.state.data = this.state.oldData;
+                this.resetFilter();
+                this.filterByCategory();
+              }else if(this.state.flagType==0 && event.target.value==0){
+               
+                this.state.flagSentiment = event.target.value ; 
+                this.state.data = this.state.oldData;
+                this.resetFilter();
+               
+              }else{
+                this.state.flagSentiment = event.target.value ;  
+                this.filterByCategory();     
+              } 
+            }
+
+        
+      filterByCategory = () => {
+
+        var i=0;
+        var k = 0;
+        var temp = []
+        var flagAll = 0;
+        
+        if (this.state.flagType===0 || this.state.flagType==='0') { 
+          
+          if(this.state.flagSentiment===1 || this.state.flagSentiment==='1'){
+
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['sent-it']!==undefined){
+                  if(this.state.data[i].sentiment['sent-it'].sentiment==='positive'){
+                    temp[k]=this.state.data[i];
+                    k++;
+                    flagAll = 1;
+                  }
+                }
+                
+                if(this.state.data[i].sentiment['feel-it']!==undefined && flagAll===0){
+                  if(this.state.data[i].sentiment['feel-it'].sentiment==='positive'){
+                    temp[k]=this.state.data[i];
+                    k++;
+                  }
+                                   
+                }
+              }
+              flagAll=0;
+              i++;
+            }
+
+          
+
+            
+
+          }else if(this.state.flagSentiment===2 || this.state.flagSentiment==='2'){
+
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['sent-it']!==undefined){
+                  if(this.state.data[i].sentiment['sent-it'].sentiment==='neutral'){
+                    flagAll = 1;
+                    temp[k]=this.state.data[i];
+                    k++;   
+                  }
+ 
+                }
+                if(this.state.data[i].sentiment['feel-it']!==undefined  && flagAll===0){
+                  if(this.state.data[i].sentiment['feel-it'].sentiment==='neutral'){
+                    temp[k]=this.state.data[i];
+                    k++;
+                  }
+                                   
+                }
+              }
+              flagAll=0;
+              i++;
+            }
+
+          }else if(this.state.flagSentiment===3 || this.state.flagSentiment==='3'){
+
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['sent-it']!==undefined){
+                  if(this.state.data[i].sentiment['sent-it'].sentiment==='negative'){
+                    flagAll = 1;
+                    temp[k]=this.state.data[i];
+                    k++;   
+                  }
+                  
+                     
+                }
+                if(this.state.data[i].sentiment['feel-it']!==undefined  && flagAll===0){
+                 
+                  if(this.state.data[i].sentiment['feel-it'].sentiment==='negative'){
+                    temp[k]=this.state.data[i];
+                    k++;
+                  }
+                                   
+                }
+              }
+              i++;
+              flagAll=0;
+            }
+
+          }
+
+          
+
+
+          //Category Sent-it
+
+
+        } 
+        
+        else if(this.state.flagType===1 || this.state.flagType==='1'){
+
+          if (this.state.flagSentiment===0 || this.state.flagSentiment==='0'){
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['sent-it']!==undefined){
+                  temp[k]=this.state.data[i];
+                  k++;   
+                }
+             }
+            i++;
+          }
+          }else if(this.state.flagSentiment===1 || this.state.flagSentiment==='1'){
+
+            
+
+            while(i<this.state.data.length){
+              
+              if(this.state.data[i].sentiment!==undefined){
+                
+                if(this.state.data[i].sentiment['sent-it']!==undefined){
+                  
+                  if(this.state.data[i].sentiment['sent-it'].sentiment==='positive'){
+                    temp[k]=this.state.data[i];
+                    k++;   
+                  }
+                         
+                }
+              }
+              i++;
+            }
+
+           
+
+          }else if(this.state.flagSentiment===2 || this.state.flagSentiment==='2'){
+
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['sent-it']!==undefined){
+                  if(this.state.data[i].sentiment['sent-it'].sentiment==='neutral'){
+                    temp[k]=this.state.data[i];
+                    k++;   
+                  }         
+                }
+              }
+              i++;
+            }
+
+          }else if(this.state.flagSentiment===3 || this.state.flagSentiment==='3'){
+
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['sent-it']!==undefined){
+                  if(this.state.data[i].sentiment['sent-it'].sentiment==='negative')
+                  {
+                    temp[k]=this.state.data[i];
+                    k++;   
+                  }          
+                }
+              }
+              i++;
+            }
+
+          }
+          
+
+
+
+          //Category Feel-it
+         
+        }else{
+
+          if (this.state.flagSentiment===0 || this.state.flagSentiment==='0'){
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['feel-it']!==undefined){
+                  temp[k]=this.state.data[i];
+                  k++;   
+                }
+             }
+            i++;
+          }
+          }else if(this.state.flagSentiment===1 || this.state.flagSentiment==='1'){
+
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['feel-it']!==undefined){
+                  if(this.state.data[i].sentiment['feel-it'].sentiment==='positive')
+                  {
+                    temp[k]=this.state.data[i];
+                    k++;   
+                  }          
+                }
+              }
+              i++;
+            }
+
+          }else if(this.state.flagSentiment===2 || this.state.flagSentiment==='2'){
+
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['feel-it']!==undefined){
+                  if(this.state.data[i].sentiment['feel-it'].sentiment==='neutral')
+                  {
+                    temp[k]=this.state.data[i];
+                    k++;   
+                  }          
+                }
+              }
+              i++;
+            }
+
+          }else if(this.state.flagSentiment===3 || this.state.flagSentiment==='3'){
+
+            while(i<this.state.data.length){
+              if(this.state.data[i].sentiment!==undefined){
+                if(this.state.data[i].sentiment['feel-it']!==undefined){
+                  if(this.state.data[i].sentiment['feel-it'].sentiment==='negative')
+                  {
+                    temp[k]=this.state.data[i];
+                    k++;   
+                  }          
+                }
+              }
+              i++;
+            }
+
+          }
+
+         
+
+      }
+      
+      this.state.data = temp
+      this.handleQuery();
+
+    }
+              
       
 
     
@@ -384,7 +664,44 @@ handleText = (text) => {
           <>      
         <div className="row stat-cards">
 
-        <div className="col-md-6 col-xl-6">
+        <div className="col-md-4 col-xl-4">
+                <article className="stat-cards-item">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="stat-cards-info">
+                        <center><h4>Algorithm</h4><br />
+                          <select id="sel1" onChange={this.handleCategory} >
+                            <option value="0">All</option>
+                            <option value="1">Sent-it</option>
+                            <option value="2">Feel-it</option>
+
+                          </select>
+
+                        </center>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="stat-cards-info">
+                        <center><h4>Sentiment</h4><br />
+                          <select id="sel1" onChange={this.handleSentiment} >
+                            <option value="0">All</option>
+                            <option value="1">Positive</option>
+                            <option value="2">Neutral</option>
+                            <option value="3">Negative</option>
+                          </select>
+
+                        </center>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                </article>
+                </div>
+
+        <div className="col-md-4 col-xl-4">
           <article className="stat-cards-item">
             <div className="row">
               <div className="col-md-6">
@@ -412,7 +729,7 @@ handleText = (text) => {
 
           </article>
         </div>
-        <div className="col-md-6 col-xl-6">
+        <div className="col-md-4 col-xl-4">
           <article className="stat-cards-item">
             <div className="row">
               <div className="col-md-12 col-xl-12">

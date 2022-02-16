@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactWordcloud from 'react-wordcloud';
-import Filters from './Filters/Filters'
+import Filters from './Filters/WordChartFilters'
 import PreLoader from "./preloader";
 
 class WordCloud extends React.Component {
@@ -12,7 +12,8 @@ class WordCloud extends React.Component {
             text:null,
             value:null
           }],
-          flag:0
+          flag:0,
+          flagWord:0
 
       }
 
@@ -23,17 +24,159 @@ class WordCloud extends React.Component {
       }
       
     }
-handleQuery = (data) => {
+
+handleQuery = (temp) => {
+
     
-    this.setState({data:data})
-    this.state.data = data
-    this.query()
+    this.setState({data:temp.data})
+    this.state.data = temp.data
+    this.state.flagWord = temp.typeWord;
+    
+    if(this.state.flagWord===0||this.state.flagWord==='0'){
+      this.queryText();
+    }else if(this.state.flagWord===1||this.state.flagWord==='1'){
+      this.queryTag();
+    }else{
+      this.queryHashtag();
+    }
+    
 
 
   }
 
+  queryTag = () =>{
+
+    var i = 0
+    var j = 0
+    var k = 0
+   
+    var words=[{
+        text:null,
+        value:0
+    }]
+
+    var temp = null
+
+    var arrayWords = []
+
+    var flag = false
+
+    
+    
+    while(i<this.state.data.length){
+      j=0;
+      if(this.state.data[i].tags.tag_me!==undefined){
+        
+        while(j<this.state.data[i].tags.tag_me.length){
+          
+          temp=this.state.data[i].tags.tag_me[j].split(' : ')
+          
+          while(k<arrayWords.length){
+            if(arrayWords[k]===temp[0]){
+              flag=true
+              break
+            }
+            k++
+          }
+    
+          if(flag===true){
+            words[k].value++
+          }else{
+            arrayWords.push(temp[0])
+            words.push({
+              text:temp[0],
+              value:1
+            })            
+      
+           k++;
+            j++;
+          }    
+      
+      
+        }
+      }
+
+    i++
+    }
+    
+    
+    this.state.words=words.slice(0,200)
+    this.setState({words:words.slice(0,200)})
+    
+    this.setState({flag:1})
+    
+
+  }
+
+  queryHashtag = () =>{
+
+    var i = 0
+    var j = 0
+    var k = 0
+   
+    var words=[{
+        text:null,
+        value:0
+    }]
+
+    var temp = null;
+
+    var arrayWords = [];
+
+    var flag = false;
+
+    
+
+    
+     
+    while(i<this.state.data.length){
+      j=0;
+
+      if(this.state.data[i].twitter_entities.hashtags!==undefined){
+        
+        while(j<this.state.data[i].twitter_entities.hashtags.length){
+          
+          temp=this.state.data[i].twitter_entities.hashtags[j]
+          
+          while(k<arrayWords.length){
+            if(arrayWords[k]===temp){
+              flag=true
+              break
+            }
+            k++
+          }
+    
+          if(flag===true){
+            words[k].value++
+          }else{
+            arrayWords.push(temp)
+            words.push({
+              text:temp,
+              value:1
+            })            
+      
+           k++;
+            j++;
+          }    
+      
+      
+        }
+      }
+     
+     i++
+     
+    }
+    
+    this.state.words=words
+    this.setState({words:words})
+    
+    this.setState({flag:1})
+
+  }
+
+
  
-      query = () =>{
+      queryText = () =>{
 
         var i = 0
         var j = 0
@@ -95,7 +238,7 @@ handleQuery = (data) => {
         }
         this.state.words=words.slice(0,200)
         this.setState({words:words.slice(0,200)})
-        console.log(this.state.words.length)
+        
         this.setState({flag:1})
 
       }

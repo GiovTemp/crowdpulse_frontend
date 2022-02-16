@@ -3,7 +3,7 @@ import './script.js';
 import axios from 'axios';
 import SentimentCharts from './components/SentimentCharts';
 import TweetList from './components/TweetList';
-import WordCloud from './components/WordCloud';
+import WordChart from './components/WordCloud';
 import TimeLines from './components/TimeLines';
 import Maps from './components/Maps';
 import Home from './components/Home';
@@ -215,7 +215,7 @@ class App extends React.Component {
         case(1): 
           return <SentimentCharts db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
         case(2): 
-          return <WordCloud db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
+          return <WordChart db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
         case(3): 
           return <TimeLines db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
         case(4):
