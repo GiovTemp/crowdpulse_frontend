@@ -1,19 +1,25 @@
 import React from "react";
 import {Radar} from 'react-chartjs-2';
 
-const data = {
+const RadarChart = (props) =>{
+  var joy = props.feelCounter.joy;
+  var sadness = props.feelCounter.sadness;
+  var anger = props.feelCounter.anger;
+  var fear = props.feelCounter.fear;
+    return(
+        <div>
+            <Radar
+	data= {{
     labels: [
-      'Eating',
-      'Drinking',
-      'Sleeping',
-      'Designing',
-      'Coding',
-      'Cycling',
-      'Running'
+      'Fear',
+      'Joy',
+      'Sadness',
+      'Anger',
+
     ],
     datasets: [{
-      label: 'My First Dataset',
-      data: [65, 59, 90, 81, 56, 55, 40],
+      label: 'Emotion',
+      data: [fear,joy, sadness, anger],
       fill: true,
       backgroundColor: 'rgba(255, 99, 132, 0.2)',
       borderColor: 'rgb(255, 99, 132)',
@@ -21,24 +27,8 @@ const data = {
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgb(255, 99, 132)'
-    }, {
-      label: 'My Second Dataset',
-      data: [28, 48, 40, 19, 96, 27, 100],
-      fill: true,
-      backgroundColor: 'rgba(54, 162, 235, 0.2)',
-      borderColor: 'rgb(54, 162, 235)',
-      pointBackgroundColor: 'rgb(54, 162, 235)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgb(54, 162, 235)'
     }]
-  };
-
-const RadarChart = () =>{
-    return(
-        <div>
-            <Radar
-	data= {data}
+  }}
 	width={100}
 	height={400}
 	options={{ maintainAspectRatio: false }}

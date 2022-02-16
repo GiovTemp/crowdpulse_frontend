@@ -13,6 +13,7 @@ class Filters extends React.Component{
             totalTweets: 0,
             flagType: 0,
             counter : [],
+            feelCounter:[],
             oldData : [],
             data: [],
             tags : [],
@@ -38,11 +39,16 @@ class Filters extends React.Component{
     getSentimentData = (data) => {
 
           
-          var negative = 0
-          var positive = 0
-          var neutral = 0
-          var i=0
-          this.state.totalTweets = data.length
+          var negative = 0;
+          var positive = 0;
+          var neutral = 0;
+          var i=0;
+          var joy =0;
+          var anger = 0;
+          var sadness = 0;
+          var fear =0;
+          this.state.totalTweets = data.length;
+          var feelCounter = [];
           while(i<data.length){
             if(data[i].sentiment!==undefined){
               if(data[i].sentiment['sent-it']!==undefined){
@@ -67,13 +73,34 @@ class Filters extends React.Component{
                   positive ++
                 else
                 neutral ++
+                
+                
+             //Get Emotion
+
+                if(data[i].sentiment['feel-it'].emotion==='joy'){
+                  joy++;
+                }else if(data[i].sentiment['feel-it'].emotion==='anger'){
+                  anger++;
+                }else if(data[i].sentiment['feel-it'].emotion==='sadness'){
+                  sadness++;
+                }else if(data[i].sentiment['feel-it'].emotion==='fear'){
+                  fear++;
+                }
               }
+          }        
+          
 
-            }
-
-    
-            i++
+          i++
         }
+
+
+        feelCounter = {
+          joy: joy,
+          sadness: sadness,
+          anger: anger,
+          fear : fear
+       }
+        
     
           var tempCounter = {
               positive: positive,
@@ -84,6 +111,8 @@ class Filters extends React.Component{
     
           this.setState({ counter: tempCounter })
           this.state.counter = tempCounter;
+          this.setState({ feelCounter: feelCounter })
+          this.state.feelCounter = feelCounter;
           this.setState({data : data})
           this.state.data = data;
           this.setState({oldData : data})
@@ -470,11 +499,17 @@ handleQuery = () => {
 
       query = () => {
        
-        var negative = 0
-        var positive = 0
-        var neutral = 0
-        var i=0
-        var tempCounter 
+        var negative = 0;
+        var positive = 0;
+        var neutral = 0;
+        var joy = 0;
+        var sadness=0;
+        var anger = 0;
+        var fear = 0;
+
+        var i=0;
+        var tempCounter;
+        var feelCounter;
         
         if (this.state.flagType===0 || this.state.flagType==='0') {               
           while(i<this.state.data.length){
@@ -534,8 +569,10 @@ handleQuery = () => {
             negative: negative,
             neutral: neutral,
          }
-         
+
+          
         }else{
+          
           
           while(i<this.state.data.length){
             if(this.state.data[i].sentiment!==undefined){
@@ -547,9 +584,31 @@ handleQuery = () => {
             else
               neutral ++
               }
-            }
+               //Get Emotion
+
+              if(this.state.data[i].sentiment['feel-it'].emotion==='joy'){
+                joy++;
+              }else if(this.state.data[i].sentiment['feel-it'].emotion==='anger'){
+                anger++;
+              }else if(this.state.data[i].sentiment['feel-it'].emotion==='sadness'){
+                sadness++;
+              }else if(this.state.data[i].sentiment['feel-it'].emotion==='fear'){
+                fear++;
+              }
+            }        
+            
+
             i++
           }
+
+
+          feelCounter = {
+            joy: joy,
+            sadness: sadness,
+            anger: anger,
+            fear : fear
+         }
+
           tempCounter = {
             positive: positive,
             negative: negative,
@@ -558,6 +617,7 @@ handleQuery = () => {
         }    
         
         this.state.counter = tempCounter
+        this.state.feelCounter = feelCounter
 
          
 
@@ -650,7 +710,7 @@ handleQuery = () => {
     
       sendData = () =>{
         
-        this.props.parentCallback(this.state.dataGroupByDates,this.state.counter);
+        this.props.parentCallback(this.state.dataGroupByDates,this.state.counter,this.state.flagType,this.state.feelCounter);
       }
       
       
