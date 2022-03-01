@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import PreLoader from "./preloader";
+import dataImg from '../img/2.jpg';
+import queryImg from '../img/3.jpg';
 
 
 
@@ -17,6 +19,7 @@ class Home extends React.Component {
           dataHashtags : [],
           dataTweet : [],
           dataSortByDate : [],
+          users : [],
           flag : 0
           
       }
@@ -32,12 +35,13 @@ class Home extends React.Component {
      
 
       axios.all([
+        /*
         axios.get('/tweet/getAnalyzedData', {
           params: {
             db: db
           },
          
-        }),
+        }),*/
         axios.get('/tweet/getDataSortByDate',{
           params: {
             db: db
@@ -58,14 +62,22 @@ class Home extends React.Component {
             db: db
           }
         }),
+        axios.get('/tweet/getUsers',{
+          params: {
+            db: db
+          }
+        }),
       ])
-      .then(axios.spread((obj1, obj2, obj3, obj4, obj5,) => {
-        // Both requests are now complete
-        this.state.dataTweet = obj1;
-        this.state.dataSortByDate = obj2;
-        this.state.dataHashtags = obj3;
-        this.state.dataText = obj4;
-        this.state.dataTags = obj5;
+      .then(axios.spread((obj1, obj2, obj3, obj4,obj5 ) => {
+        // All requests are now complete
+     
+        this.state.dataSortByDate = obj1;
+        this.state.dataHashtags = obj2;
+        this.state.dataText = obj3;
+        this.state.dataTags = obj4;
+        this.state.users = obj5;
+
+        console.log(obj5)
         this.setState({flag:1})    
         this.sendData()    
         
@@ -87,12 +99,36 @@ class Home extends React.Component {
 
          body=  
         <>
-            <h3>Hai selezionato  il db : {this.props.mongodb} </h3><br/><br/><br/>
+
+        {/* ! Main */}
+        <main className="main users chart-page" id="skip-target">
+          <div className="container">
+            <br/><br/>
+            <h3>Dati caricati correttamente hai selezionato  il db : {this.props.mongodb} </h3><br/><br/><br/>
             <div className="row">
 
-              Dati caricati correttamente
+                <div className="col-lg-4 howBox">
+                    <div className="how">
+                    <img src={dataImg}/>
+                    <br/>
+                       <b>2</b>
+                       <br/>
 
+                        Selezioni i grafici che ti interessano
+                    </div>
+                </div>
+                <div className="col-lg-4 howBox">
+                    <div className="how">
+                    <img src={queryImg}/>
+                    <br/>
+                    <b>3</b>
+                       <br/>
+                        Utilizza i filtri per essere più preciso 
+                    </div>
+                </div>
             </div>
+          </div>
+        </main>
         </>
       }else{
         body=

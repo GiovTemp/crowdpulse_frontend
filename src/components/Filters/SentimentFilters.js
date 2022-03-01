@@ -1,6 +1,6 @@
-import axios from 'axios';
-import SearchFilters from './SearchFilters';
 import React from 'react';
+import SearchUser from './SearchUser';
+import SearchFilters from './SearchFilters';
 import SearchText from './SearchText';
 import SearchHashtag from './SearchHashtag';
 
@@ -19,6 +19,7 @@ class Filters extends React.Component{
             tags : [],
             text : [],
             hashtags : [],
+            users : [],
             dataGroupByDates: [],
             fromDate: null,
             toDate : null,
@@ -26,12 +27,12 @@ class Filters extends React.Component{
         }
       
         
-        this.getSentimentData(this.props.tweetsData.dataTweet.data)
+        this.getSentimentData(this.props.tweetsData.dataSortByDate.data)
     }
 
     componentDidUpdate(prevProps) {
       if(prevProps.mongodb!==this.props.mongodb){
-        this.getSentimentData(this.props.tweetsData.dataTweet.data)
+        this.getSentimentData(this.props.tweetsData.dataSortByDate.data)
       }
       
     }
@@ -125,58 +126,69 @@ class Filters extends React.Component{
             counterPositive:null,
             counterNegative:null,
             counterNeutral:null,
-          }]
-    
-          
+          }];
+  
+         
+
+          //MultiLine Charts
+
+  
+          var i = 0
           var j = 0
           
           if(this.state.data.length!==0){
-            var i =this.state.data.length-1
-            var dt = this.state.data[i].created_at.substring(0, 10)
+            var dt = this.state.data[0].created_at.substring(0, 10)
             dataGroupByDates[0].id=dt
-            i--
-            while(i>-1){
-              if(this.state.data[i].sentiment!==undefined){
-                if(this.state.data[i].sentiment['feel-it']!==undefined){
-              
+  
+            while(i<this.state.data.length){
+  
               if(dataGroupByDates[j].id===this.state.data[i].created_at.substring(0, 10)){
-                if( this.state.data[i].sentiment['feel-it'].sentiment==='positive'){
-                  dataGroupByDates[j].counterPositive++
-                }else if( this.state.data[i].sentiment['feel-it'].sentiment==='negative'){
-                  dataGroupByDates[j].counterNegative++
-                }else if( this.state.data[i].sentiment['feel-it'].sentiment==='neutral'){
-                  dataGroupByDates[j].counterNeutral++
+                if(this.state.data[i].sentiment['sent-it']!==undefined){
+                  switch (this.state.data[i].sentiment['sent-it'].sentiment) {
+                    case 'positive':
+                      dataGroupByDates[j].counterPositive++;
+                      break;
+                    case 'negative':
+                      dataGroupByDates[j].counterNegative++;
+                      break;
+                    case 'neutral':
+                      dataGroupByDates[j].counterNeutral++;
+                      break;
+                  }
                 }
-    
-    
+
+                if(this.state.data[i].sentiment['feel-it']!==undefined){
+                  switch (this.state.data[i].sentiment['feel-it'].sentiment) {
+                    case 'positive':
+                      dataGroupByDates[j].counterPositive++;
+                      break;
+                    case 'negative':
+                      dataGroupByDates[j].counterNegative++;
+                      break;
+                    case 'neutral':
+                      dataGroupByDates[j].counterNeutral++;
+                      break;
+                  }
+                }
+
+               
               }else{
-                j++
-    
-                dataGroupByDates.push({
-                  id:this.state.data[i].created_at.substring(0, 10),
-                  counterPositive:0,
-                  counterNegative:0,
-                  counterNeutral:0,
-                })
-                if( this.state.data[i].sentiment['feel-it'].sentiment==='positive'){
-                  dataGroupByDates[j].counterPositive++
-                }else if( this.state.data[i].sentiment['feel-it'].sentiment==='negative'){
-                  dataGroupByDates[j].counterNegative++
-                }else if( this.state.data[i].sentiment['feel-it'].sentiment==='neutral'){
-                  dataGroupByDates[j].counterNeutral++
-                }
+                  j++
+                  dataGroupByDates.push({
+                    id :this.state.data[i].created_at.substring(0, 10),
+                    counterPositive:0,
+                    counterNegative:0,
+                    counterNeutral:0,
+                  })             
               }
-            }
-          }
-              i--
+              i++
             }
             
           }
-    
-          this.setState({dataGroupByDates : dataGroupByDates})
-          this.state.dataGroupByDates=dataGroupByDates     
-                      
-          this.sendData()
+  
+          this.setState({dataGroupByDates : dataGroupByDates});
+          this.state.dataGroupByDates=dataGroupByDates;       
+          this.sendData();
       }    
       
     
@@ -478,6 +490,53 @@ filterByHashtags = (hashtags) => {
   
 }
 
+
+///USERS Section
+
+handleUsers = (users) => {
+  if(users.length>this.state.users.length){
+    this.state.users=users
+    this.filterByUser(users)
+    this.handleQuery()
+  }else{
+    this.state.users=users
+    this.resetFilter()
+  }
+}
+
+filterByUser = (users) => {
+  var i =0
+  var j =0
+  var k = 0
+
+  var tempData = []
+  var flag = false
+  
+  while(i<this.state.data.length){
+    j=0   
+      while(j<users.length){
+        if(this.state.data[i].author_name===users[j].name){
+         
+          flag = true
+          break;               
+        }else{
+          flag = false
+        }
+        j++;
+      }
+      if(flag===true){
+        tempData[k]= this.state.data[i];
+        k++
+      }
+    i++;
+  }
+
+         
+  this.state.data=tempData
+  this.state.totalTweets=tempData.length
+  
+}
+
   //QUERY SECTION  
 handleQuery = () => {
   if(this.state.data.length===0){
@@ -526,7 +585,7 @@ handleQuery = () => {
             }
             i++
           }
-          i=0
+          i=0;
           while(i<this.state.data.length){
             if(this.state.data[i].sentiment!==undefined){
               if(this.state.data[i].sentiment['feel-it']!==undefined){
@@ -623,62 +682,121 @@ handleQuery = () => {
 
           
 
+        var dataFeelGroupByDates=[{
+          id:null,
+          counterPositive:0,
+          counterNegative:0,
+          counterNeutral:0,
+        }];
+
+        var dataSentGroupByDates=[{
+          id:null,
+          counterPositive:0,
+          counterNegative:0,
+          counterNeutral:0,
+        }];
+
         var dataGroupByDates=[{
           id:null,
-          counterPositive:null,
-          counterNegative:null,
-          counterNeutral:null,
-        }]
-  
+          counterPositive:0,
+          counterNegative:0,
+          counterNeutral:0,
+        }];
+
+      
         
-        var j = 0
-        
+
+        //MultiLine Charts
+
+        var j = 0;
+        i = 0;
         if(this.state.data.length!==0){
-          var i =this.state.data.length-1
-          var dt = this.state.data[i].created_at.substring(0, 10)
+          var dt = this.state.data[0].created_at.substring(0, 10)
           dataGroupByDates[0].id=dt
-          i--
-          while(i>-1){
-            if(this.state.data[i].sentiment!==undefined){
-              if(this.state.data[i].sentiment['feel-it']!==undefined){
-            
+          dataSentGroupByDates[0].id=dt
+          dataFeelGroupByDates[0].id=dt
+
+          while(i<this.state.data.length){
+
             if(dataGroupByDates[j].id===this.state.data[i].created_at.substring(0, 10)){
-              if( this.state.data[i].sentiment['feel-it'].sentiment==='positive'){
-                dataGroupByDates[j].counterPositive++
-              }else if( this.state.data[i].sentiment['feel-it'].sentiment==='negative'){
-                dataGroupByDates[j].counterNegative++
-              }else if( this.state.data[i].sentiment['feel-it'].sentiment==='neutral'){
-                dataGroupByDates[j].counterNeutral++
+              if(this.state.data[i].sentiment['sent-it']!==undefined){
+                switch (this.state.data[i].sentiment['sent-it'].sentiment) {
+                  case 'positive':
+                    dataGroupByDates[j].counterPositive++;
+                    dataSentGroupByDates[j].counterPositive++;
+                    break;
+                  case 'negative':
+                    dataGroupByDates[j].counterNegative++;
+                    dataSentGroupByDates[j].counterNegative++;
+                    break;
+                  case 'neutral':
+                    dataGroupByDates[j].counterNeutral++;
+                    dataSentGroupByDates[j].counterNeutral++;
+                    break;
+                }
               }
-  
-  
+
+              if(this.state.data[i].sentiment['feel-it']!==undefined){
+                switch (this.state.data[i].sentiment['feel-it'].sentiment) {
+                  case 'positive':
+                    dataGroupByDates[j].counterPositive++;
+                    dataFeelGroupByDates[j].counterPositive++;
+                    break;
+                  case 'negative':
+                    dataGroupByDates[j].counterNegative++;
+                    dataFeelGroupByDates[j].counterNegative++;
+                    break;
+                  case 'neutral':
+                    dataGroupByDates[j].counterNeutral++;
+                    dataFeelGroupByDates[j].counterNeutral++;
+                    break;
+                }
+              }
+
+             
             }else{
-              j++
-  
-              dataGroupByDates.push({
-                id:this.state.data[i].created_at.substring(0, 10),
-                counterPositive:0,
-                counterNegative:0,
-                counterNeutral:0,
-              })
-              if( this.state.data[i].sentiment['feel-it'].sentiment==='positive'){
-                dataGroupByDates[j].counterPositive++
-              }else if( this.state.data[i].sentiment['feel-it'].sentiment==='negative'){
-                dataGroupByDates[j].counterNegative++
-              }else if( this.state.data[i].sentiment['feel-it'].sentiment==='neutral'){
-                dataGroupByDates[j].counterNeutral++
-              }
+                j++
+                dataGroupByDates.push({
+                  id :this.state.data[i].created_at.substring(0, 10),
+                  counterPositive:0,
+                  counterNegative:0,
+                  counterNeutral:0,
+                })
+
+                dataSentGroupByDates.push({
+                  id :this.state.data[i].created_at.substring(0, 10),
+                  counterPositive:0,
+                  counterNegative:0,
+                  counterNeutral:0,
+                })
+                
+                dataFeelGroupByDates.push({
+                  id :this.state.data[i].created_at.substring(0, 10),
+                  counterPositive:0,
+                  counterNegative:0,
+                  counterNeutral:0,
+                })
+           
             }
-          }
-        }
-            i--
+            i++
           }
           
         }
-  
-        this.setState({dataGroupByDates : dataGroupByDates})
-        this.state.dataGroupByDates=dataGroupByDates     
-                    
+
+        
+        if(this.state.flagType===0 ||this.state.flagType==='0'){
+          this.setState({dataGroupByDates : dataGroupByDates});
+          this.state.dataGroupByDates=dataGroupByDates;  
+        }else if(this.state.flagType===1 ||this.state.flagType==='1'){
+          this.setState({dataGroupByDates : dataSentGroupByDates});
+          this.state.dataGroupByDates=dataSentGroupByDates;  
+        }else if(this.state.flagType===2 ||this.state.flagType==='2'){
+          this.setState({dataGroupByDates : dataFeelGroupByDates});
+          this.state.dataGroupByDates=dataFeelGroupByDates;  
+        }
+        
+        
+        
         this.sendData()
       }
 
@@ -701,6 +819,10 @@ handleQuery = () => {
 
         if(this.state.text.length!==0){
           this.filterByText(this.state.text)
+        }
+
+        if(this.state.users.length!==0){
+          this.filterByUser(this.state.users)
         }
 
         this.handleQuery()
@@ -790,7 +912,7 @@ handleQuery = () => {
             </div>
             <br></br>
             <div className="row stat-cards">
-            <div className="col-md-4 col-xl-4">
+            <div className="col-md-3 col-xl-3">
               <article className="stat-cards-item">
                 <div className="row">
     
@@ -809,7 +931,7 @@ handleQuery = () => {
               </article>
             </div>
     
-            <div className="col-md-4 col-xl-4">
+            <div className="col-md-3 col-xl-3">
               <article className="stat-cards-item">
                 <div className="row">
     
@@ -828,7 +950,7 @@ handleQuery = () => {
               </article>
             </div>
     
-            <div className="col-md-4 col-xl-4">
+            <div className="col-md-3 col-xl-3">
               <article className="stat-cards-item">
                 <div className="row">
     
@@ -836,6 +958,26 @@ handleQuery = () => {
                     <div className="stat-cards-info">
                       <center><h4>Hashtags</h4><br />
                       <SearchHashtag parentCallback = {this.handleHashtags.bind(this)} db = {this.props.db} allHashtags = {this.props.tweetsData.dataHashtags}/>
+                        
+                      </center>
+                    </div>
+                  </div>
+    
+    
+                </div>
+    
+              </article>
+            </div>
+
+
+            <div className="col-md-3 col-xl-3">
+              <article className="stat-cards-item">
+                <div className="row">
+    
+                  <div className="col-md-12 col-xl-12">
+                    <div className="stat-cards-info">
+                      <center><h4>Username</h4><br />
+                      <SearchUser parentCallback = {this.handleUsers.bind(this)} db = {this.props.db} allUser = {this.props.tweetsData.users}/>
                         
                       </center>
                     </div>

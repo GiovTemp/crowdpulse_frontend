@@ -14,6 +14,7 @@ import { jsPDF } from "jspdf";
 import  html2canvas  from 'html2canvas';
 
 import React from 'react';
+import PreLoader from './components/preloader';
 
 
 class App extends React.Component {
@@ -24,7 +25,7 @@ class App extends React.Component {
     mongodb_selected:"",
     collections:[],
     dbs:[],
-    allTweetsData:[]  };
+    allTweetsData:[],  };
   constructor(props){
     super(props)
     this.getData()
@@ -68,27 +69,75 @@ class App extends React.Component {
   }
 
 
-    
+  loadSpinner = () => {
+    this.setState({content:7});
+  }  
 
 
   displaySentimentCharts = () => {
-    this.setState({content:1})
+    if(this.state.mongodb_selected!==''){
+      this.loadSpinner();
+      setTimeout(function() { //Start the timer
+        this.setState({content:1}); //After 1 second, set content to the correct section
+    }.bind(this), 1000)
+        
+      
+    }else{
+      alert('Prima devi selezionare un Database');
+    }
+    
   }
  
   displayWordCloud = () => {
-    this.setState({content:2})
+    if(this.state.mongodb_selected!==''){
+      this.loadSpinner();
+      setTimeout(function() { //Start the timer
+        this.setState({content:2}); //After 1 second, set content to the correct section
+    }.bind(this), 1000)
+        
+    }else{
+      alert('Prima devi selezionare un Database');
+      
+    }
+    
   }
  
   displayTimeLines = () => {
-    this.setState({content:3})
+    if(this.state.mongodb_selected!==''){
+      this.loadSpinner();
+      setTimeout(function() { //Start the timer
+        this.setState({content:3}); //After 1 second, set content to the correct section
+    }.bind(this), 1000)
+        
+    }else{
+      alert('Prima devi selezionare un Database');
+      
+    }
   }
  
   displayTweetList = () => {
-    this.setState({content:4})
+    if(this.state.mongodb_selected!==''){
+      this.loadSpinner();
+      setTimeout(function() { //Start the timer
+        this.setState({content:4}); //After 1 second, set content to the correct section
+    }.bind(this), 1000)
+        
+    }else{
+      alert('Prima devi selezionare un Database');      
+    }
   }
 
   displayMaps = () => {
-    this.setState({content:5})
+    if(this.state.mongodb_selected!==''){
+      this.loadSpinner();
+      setTimeout(function() { //Start the timer
+        this.setState({content:5}); //After 1 second, set content to the correct section
+    }.bind(this), 1000)
+        
+    }else{
+      alert('Prima devi selezionare un Database');
+
+    }
   }
   
   handleDbChange = (db) => {
@@ -224,6 +273,8 @@ class App extends React.Component {
           return <Maps db={this.state.db_selected} mongodb={this.state.mongodb_selected} allTweetsData={this.state.allTweetsData}/>;
         case(6):
           return <LoadingData parentCallback = {this.getAllData.bind(this)} db={this.state.db_selected} mongodb={this.state.mongodb_selected}/>;
+        case(7):
+          return <PreLoader/>
       }
     }
 
@@ -311,21 +362,6 @@ class App extends React.Component {
                    
                 </li>
 
-
-                <li>
-                    <a class="show-cat-btn" href="##">
-                        <span class="icon folder" aria-hidden="true"></span>Collections
-                        <span class="category__btn transparent-btn" title="Open list">
-                            <span class="sr-only">Open list</span>
-                            <span class="icon arrow-down" aria-hidden="true"></span>
-                        </span>
-                    </a>
-                  
-                      <Collection data={this.state.collections} parentCallback = {this.handleDbChange.bind(this)}/>
-
-                   
-                </li>
-                  
                 </ul>
               </div>
             </div>

@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactTags from 'react-tag-autocomplete'
 import './css/searchbar.css';
-import axios from 'axios';
 
 
-//https://www.npmjs.com/package/react-tag-autocomplete
+
+
 class SearchHashtag extends React.Component {
   constructor (props) {
     super(props)
@@ -96,6 +96,7 @@ this.reactTags = React.createRef()
         suggestions={this.state.suggestions}
         onDelete={this.onDelete.bind(this)}
         onAddition={this.onAddition.bind(this)} 
+        allowNew={true}
         classNames="search"
         />
      

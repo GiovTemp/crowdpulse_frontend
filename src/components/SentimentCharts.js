@@ -47,9 +47,7 @@ componentDidUpdate(prevProps) {
       this.setState({feelCounter:feelCounter});
       this.state.feelCounter = feelCounter;
 
-      console.log(feelCounter)
-
-       this.setState({flag:1})
+      this.setState({flag:1});
       
     }
 

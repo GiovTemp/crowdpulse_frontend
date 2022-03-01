@@ -2806,6 +2806,17 @@ label {
   padding: 20px;
 }
 
+.CloudChart{
+  height: 100vh;
+  width: 100%;  
+  margin-bottom: 20px;
+  -webkit-box-shadow: 0px 15px 50px 0px rgba(160, 163, 189, 0.1);
+  box-shadow: 0px 15px 50px 0px rgba(160, 163, 189, 0.1);
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+}
+
 .main {
   padding-top: 20px;
   padding-bottom: 20px;

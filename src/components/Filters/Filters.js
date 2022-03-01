@@ -1,4 +1,4 @@
-import axios from 'axios';
+import SearchUser from './SearchUser';
 import SearchFilters from './SearchFilters';
 import SearchText from './SearchText';
 import SearchHashtag from './SearchHashtag';
@@ -20,23 +20,24 @@ class Filters extends React.Component{
           data: [],
           tags : [],
           text : [],
+          users : [],
           hashtags : [],
           fromDate: null,
           toDate : null,
 
       }
      
-      this.getData(this.props.tweetsData.dataTweet.data);
+      this.getData(this.props.tweetsData.dataSortByDate.data);
    
 
-      this.state.totalTweets = this.props.tweetsData.dataTweet.data.length;
+      this.state.totalTweets = this.props.tweetsData.dataSortByDate.data.length;
       
       this.query()
     }
 
     componentDidUpdate(prevProps) {
       if(prevProps.mongodb!==this.props.mongodb){
-        this.getData(this.props.tweetsData.dataTweet.data)
+        this.getData(this.props.tweetsData.dataSortByDate.data)
       }
       
     }
@@ -336,6 +337,52 @@ handleText = (text) => {
         this.handleQuery()
       }
 
+      ///USERS Section
+
+handleUsers = (users) => {
+  if(users.length>this.state.users.length){
+    this.state.users=users
+    this.filterByUser(users)
+    this.handleQuery()
+  }else{
+    this.state.users=users
+    this.resetFilter()
+  }
+}
+
+filterByUser = (users) => {
+  var i =0
+  var j =0
+  var k = 0
+
+  var tempData = []
+  var flag = false
+
+  while(i<this.state.data.length){
+    j=0   
+      while(j<users.length){
+        if(this.state.data[i].author_name===users[j].name){
+         
+          flag = true
+          break;               
+        }else{
+          flag = false
+        }
+        j++;
+      }
+      if(flag===true){
+        tempData[k]= this.state.data[i];
+        k++
+      }
+    i++;
+  }
+
+         
+  this.state.data=tempData
+  this.state.totalTweets=tempData.length
+  
+}
+
       //RESET SECTIOn
       resetFilter = () => {
 
@@ -357,6 +404,10 @@ handleText = (text) => {
 
         if(this.state.text.length!==0){
           this.filterByText(this.state.text)
+        }
+        
+        if(this.state.users.length!==0){
+          this.filterByUser(this.state.users)
         }
 
         this.handleQuery()
@@ -755,7 +806,7 @@ handleText = (text) => {
       </div>
       <br></br>
       <div className="row stat-cards">
-        <div className="col-md-4 col-xl-4">
+        <div className="col-md-3 col-xl-3">
           <article className="stat-cards-item">
             <div className="row">
 
@@ -774,7 +825,7 @@ handleText = (text) => {
           </article>
         </div>
 
-        <div className="col-md-4 col-xl-4">
+        <div className="col-md-3 col-xl-3">
           <article className="stat-cards-item">
             <div className="row">
 
@@ -793,7 +844,7 @@ handleText = (text) => {
           </article>
         </div>
 
-        <div className="col-md-4 col-xl-4">
+        <div className="col-md-3 col-xl-3">
           <article className="stat-cards-item">
             <div className="row">
 
@@ -811,6 +862,25 @@ handleText = (text) => {
 
           </article>
         </div>
+
+        <div className="col-md-3 col-xl-3">
+              <article className="stat-cards-item">
+                <div className="row">
+    
+                  <div className="col-md-12 col-xl-12">
+                    <div className="stat-cards-info">
+                      <center><h4>Username</h4><br />
+                      <SearchUser parentCallback = {this.handleUsers.bind(this)} db = {this.props.db} allUser = {this.props.tweetsData.users}/>
+                        
+                      </center>
+                    </div>
+                  </div>
+    
+    
+                </div>
+    
+              </article>
+            </div>
 
 
       </div>

@@ -24,14 +24,13 @@ class WordCloud extends React.Component {
       }
       
     }
-
-handleQuery = (temp) => {
-
     
+  handleQuery = (temp) =>{
+   
     this.setState({data:temp.data})
     this.state.data = temp.data
     this.state.flagWord = temp.typeWord;
-    
+    console.log(temp)
     if(this.state.flagWord===0||this.state.flagWord==='0'){
       this.queryText();
     }else if(this.state.flagWord===1||this.state.flagWord==='1'){
@@ -39,7 +38,9 @@ handleQuery = (temp) => {
     }else{
       this.queryHashtag();
     }
-    
+    this.state.flag=1;
+    this.setState({flag:1});
+    console.log(this.state.flag)
 
 
   }
@@ -69,10 +70,11 @@ handleQuery = (temp) => {
         
         while(j<this.state.data[i].tags.tag_me.length){
           
-          temp=this.state.data[i].tags.tag_me[j].split(' : ')
-          
+          temp=this.state.data[i].tags.tag_me[j].split(' : ')[0]
+          k=0;
+          flag=false;
           while(k<arrayWords.length){
-            if(arrayWords[k]===temp[0]){
+            if(arrayWords[k]===temp){
               flag=true
               break
             }
@@ -82,16 +84,16 @@ handleQuery = (temp) => {
           if(flag===true){
             words[k].value++
           }else{
-            arrayWords.push(temp[0])
+            arrayWords.push(temp)
             words.push({
-              text:temp[0],
+              text:temp,
               value:1
             })            
       
-           k++;
-            j++;
+
+            
           }    
-      
+          j++;
       
         }
       }
@@ -137,7 +139,8 @@ handleQuery = (temp) => {
         while(j<this.state.data[i].twitter_entities.hashtags.length){
           
           temp=this.state.data[i].twitter_entities.hashtags[j]
-          
+          k=0;
+          flag=false;
           while(k<arrayWords.length){
             if(arrayWords[k]===temp){
               flag=true
@@ -154,11 +157,10 @@ handleQuery = (temp) => {
               text:temp,
               value:1
             })            
-      
-           k++;
-            j++;
+
+            
           }    
-      
+          j++;
       
         }
       }
@@ -276,14 +278,30 @@ handleQuery = (temp) => {
       }
     
       render () {
-        var body;
+        const renderContent = () => {
+          
+           return <Filters parentCallback = {this.handleQuery.bind(this)} db = {this.props.db}  tweetsData={this.props.allTweetsData}/>;
+         
+          }
+        
+        var body;      
+        var temp = renderContent();
+        var filters;
+        console.log(temp)
+        if(temp!==null){
+          filters=temp;
+        }else{
+          filters=<PreLoader/>
+        }
         if(this.state.flag>0){
           body =<div className="row">
           <div className="col-lg-12">
-            <div className="chart" id="wordChart">
+            <div className="CloudChart" id="wordChart">
             <ReactWordcloud words={this.state.words}       options={{
         fontFamily: 'monospace',
-        fontSizes: [10, 50],
+        rotations: 1,
+        rotationAngles: [0],
+        fontSizes: [20, 60],
       }} />
             </div>
           </div>
@@ -306,7 +324,8 @@ handleQuery = (temp) => {
             <br/>
             <h3>Word Cloud - {this.props.mongodb} </h3>
             <br/>
-            <Filters parentCallback = {this.handleQuery.bind(this)} db = {this.props.db}  tweetsData={this.props.allTweetsData}/>
+            {filters}
+            
             <br/>
 
             {body}

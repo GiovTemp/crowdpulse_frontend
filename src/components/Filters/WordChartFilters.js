@@ -1,8 +1,9 @@
-import axios from 'axios';
+import SearchUser from './SearchUser';
 import SearchFilters from './SearchFilters';
 import SearchText from './SearchText';
 import SearchHashtag from './SearchHashtag';
 import React, { useEffect } from 'react';
+import PreLoader from '../preloader';
 
 
 class Filters extends React.Component{
@@ -15,24 +16,26 @@ class Filters extends React.Component{
           totalTweets: 0,
           flagType: 0,
           flagSentiment : 0,
-          flagTypeWord:0,
+          flagTypeWord:1,
           counter : [],
           oldData : [],
           data: [],
           tags : [],
           text : [],
+          users : [],
           hashtags : [],
           fromDate: null,
           toDate : null,
+          loading:true
 
       }
      
-      this.getData(this.props.tweetsData.dataTweet.data);
+      this.getData(this.props.tweetsData.dataSortByDate.data);
    
 
-      this.state.totalTweets = this.props.tweetsData.dataTweet.data.length;
+      this.state.totalTweets = this.props.tweetsData.dataSortByDate.data.length;
       
-      this.query()
+ 
     }
 
     componentDidUpdate(prevProps) {
@@ -42,11 +45,13 @@ class Filters extends React.Component{
       
     }
 
-    getData = (Alldata) => {
+    getData = (Alldata) =>{
            
           const data = Alldata;
           this.state.data = Alldata;
           this.state.oldData = Alldata
+          this.state.loading=true;
+          this.setState({loading:true});
           
           this.setState({totalTweets : data.length})
           this.query()
@@ -337,6 +342,52 @@ handleText = (text) => {
         this.handleQuery()
       }
 
+      ///USERS Section
+
+handleUsers = (users) => {
+  if(users.length>this.state.users.length){
+    this.state.users=users
+    this.filterByUser(users)
+    this.handleQuery()
+  }else{
+    this.state.users=users
+    this.resetFilter()
+  }
+}
+
+filterByUser = (users) => {
+  var i =0
+  var j =0
+  var k = 0
+
+  var tempData = []
+  var flag = false
+  
+  while(i<this.state.data.length){
+    j=0   
+      while(j<users.length){
+        if(this.state.data[i].author_name===users[j].name){
+         
+          flag = true
+          break;               
+        }else{
+          flag = false
+        }
+        j++;
+      }
+      if(flag===true){
+        tempData[k]= this.state.data[i];
+        k++
+      }
+    i++;
+  }
+
+         
+  this.state.data=tempData
+  this.state.totalTweets=tempData.length
+  
+}
+
       //RESET SECTIOn
       resetFilter = () => {
 
@@ -358,6 +409,9 @@ handleText = (text) => {
 
         if(this.state.text.length!==0){
           this.filterByText(this.state.text)
+        }
+        if(this.state.users.length!==0){
+          this.filterByUser(this.state.users)
         }
 
         this.handleQuery()
@@ -673,184 +727,217 @@ handleText = (text) => {
         };
         temp.data = this.state.data;
         temp.typeWord = this.state.flagTypeWord;
+        this.state.loading=false;
+        this.setState({loading:false});
         this.props.parentCallback(temp);
       }
       
       
 
-    
     render(){
-        return(      
+      const renderContent = () => {
+        var body;
+        if(this.state.loading===true){
+          body =  <PreLoader/>
+        }else{
+         body=
           <>      
+          <div className="row stat-cards">
+  
+          <div className="col-md-4 col-xl-4">
+                  <article className="stat-cards-item">
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="stat-cards-info">
+                          <center><h4>Algorithm</h4><br />
+                            <select id="sel1" onChange={this.handleCategory} >
+                              <option value="0">All</option>
+                              <option value="1">Sent-it</option>
+                              <option value="2">Feel-it</option>
+  
+                            </select>
+  
+                          </center>
+                        </div>
+                      </div>
+  
+                      <div className="col-md-6">
+                        <div className="stat-cards-info">
+                          <center><h4>Sentiment</h4><br />
+                            <select id="sel1" onChange={this.handleSentiment} >
+                              <option value="0">All</option>
+                              <option value="1">Positive</option>
+                              <option value="2">Neutral</option>
+                              <option value="3">Negative</option>
+                            </select>
+  
+                          </center>
+                        </div>
+                      </div>
+  
+  
+                    </div>
+  
+                  </article>
+                </div>
+  
+          <div className="col-md-2 col-xl-2">
+            <article className="stat-cards-item">
+              <div className="row">
+                <div className="col-md-12 col-xl-12">
+                <div className="stat-cards-info">
+                          <center><h4>Type</h4><br />
+                            <select id="sel1" onChange={this.handleTypeWord} >
+                              <option value="1">Tags</option>
+                              <option value="0">Text</option>
+                              <option value="2">Hashtags</option>
+                            </select>
+  
+                          </center>
+                        </div>
+                </div>
+  
+  
+              </div>
+  
+            </article>
+          </div>
+  
+          <div className="col-md-4 col-xl-4">
+            <article className="stat-cards-item">
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="stat-cards-info">
+                    <center><h4>From </h4><br />
+                      <input type="date" 
+                      name="startDate"
+                      onBlur={this.handleFromDatesChanges}/>
+  
+                      
+                    </center>
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="stat-cards-info">
+                    <center><h4>To </h4><br />
+                      <input type="date"
+                      id="toDate"
+                      onBlur={this.handleToDatesChanges} />
+                    </center>
+                  </div>
+                </div> 
+            
+              </div>
+  
+            </article>
+          </div>
+          <div className="col-md-2 col-xl-2">
+            <article className="stat-cards-item">
+              <div className="row">
+                <div className="col-md-12 col-xl-12">
+                  <div className="stat-cards-info">
+                    <center><h4>Total Tweets</h4><br />
+                       <h1> {this.state.totalTweets} </h1>
+                      
+                    </center>
+                  </div>
+                </div>
+  
+  
+              </div>
+  
+            </article>
+          </div>
+        </div>
+        <br></br>
         <div className="row stat-cards">
-
-        <div className="col-md-4 col-xl-4">
+          <div className="col-md-3 col-xl-3">
+            <article className="stat-cards-item">
+              <div className="row">
+  
+                <div className="col-md-12 col-xl-12">
+                  <div className="stat-cards-info">
+                    <center><h4>Tags</h4><br />
+                    <SearchFilters parentCallback = {this.handleTags.bind(this)} db = {this.props.db} allTags = {this.props.tweetsData.dataTags}/>
+                      
+                    </center>
+                  </div>
+                </div>
+  
+  
+              </div>
+  
+            </article>
+          </div>
+  
+          <div className="col-md-3 col-xl-3">
+            <article className="stat-cards-item">
+              <div className="row">
+  
+                <div className="col-md-12 col-xl-12">
+                  <div className="stat-cards-info">
+                    <center><h4>Processed Text</h4><br />
+                    <SearchText parentCallback = {this.handleText.bind(this)} db = {this.props.db}  allText = {this.props.tweetsData.dataText}/>
+                      
+                    </center>
+                  </div>
+                </div>
+  
+  
+              </div>
+  
+            </article>
+          </div>
+  
+          <div className="col-md-3 col-xl-3">
+            <article className="stat-cards-item">
+              <div className="row">
+  
+                <div className="col-md-12 col-xl-12">
+                  <div className="stat-cards-info">
+                    <center><h4>Hashtags</h4><br />
+                    <SearchHashtag parentCallback = {this.handleHashtags.bind(this)} db = {this.props.db} allHashtags = {this.props.tweetsData.dataHashtags}/>
+                      
+                    </center>
+                  </div>
+                </div>
+  
+  
+              </div>
+  
+            </article>
+          </div>
+  
+          <div className="col-md-3 col-xl-3">
                 <article className="stat-cards-item">
                   <div className="row">
-                    <div className="col-md-6">
+      
+                    <div className="col-md-12 col-xl-12">
                       <div className="stat-cards-info">
-                        <center><h4>Algorithm</h4><br />
-                          <select id="sel1" onChange={this.handleCategory} >
-                            <option value="0">All</option>
-                            <option value="1">Sent-it</option>
-                            <option value="2">Feel-it</option>
-
-                          </select>
-
+                        <center><h4>Username</h4><br />
+                        <SearchUser parentCallback = {this.handleUsers.bind(this)} db = {this.props.db} allUser = {this.props.tweetsData.users}/>
+                          
                         </center>
                       </div>
                     </div>
-
-                    <div className="col-md-6">
-                      <div className="stat-cards-info">
-                        <center><h4>Sentiment</h4><br />
-                          <select id="sel1" onChange={this.handleSentiment} >
-                            <option value="0">All</option>
-                            <option value="1">Positive</option>
-                            <option value="2">Neutral</option>
-                            <option value="3">Negative</option>
-                          </select>
-
-                        </center>
-                      </div>
-                    </div>
-
-
+      
+      
                   </div>
-
+      
                 </article>
               </div>
-
-        <div className="col-md-2 col-xl-2">
-          <article className="stat-cards-item">
-            <div className="row">
-              <div className="col-md-12 col-xl-12">
-              <div className="stat-cards-info">
-                        <center><h4>Type</h4><br />
-                          <select id="sel1" onChange={this.handleTypeWord} >
-                            <option value="0">Text</option>
-                            <option value="1">Tags</option>
-                            <option value="2">Hashtags</option>
-                          </select>
-
-                        </center>
-                      </div>
-              </div>
-
-
-            </div>
-
-          </article>
+  
+  
         </div>
+          </>
+        } 
 
-        <div className="col-md-4 col-xl-4">
-          <article className="stat-cards-item">
-            <div className="row">
-              <div className="col-md-6">
-                <div className="stat-cards-info">
-                  <center><h4>From </h4><br />
-                    <input type="date" 
-                    name="startDate"
-                    onBlur={this.handleFromDatesChanges}/>
+        return body;
 
-                    
-                  </center>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="stat-cards-info">
-                  <center><h4>To </h4><br />
-                    <input type="date"
-                    id="toDate"
-                    onBlur={this.handleToDatesChanges} />
-                  </center>
-                </div>
-              </div> 
-          
-            </div>
-
-          </article>
-        </div>
-        <div className="col-md-2 col-xl-2">
-          <article className="stat-cards-item">
-            <div className="row">
-              <div className="col-md-12 col-xl-12">
-                <div className="stat-cards-info">
-                  <center><h4>Total Tweets</h4><br />
-                     <h1> {this.state.totalTweets} </h1>
-                    
-                  </center>
-                </div>
-              </div>
-
-
-            </div>
-
-          </article>
-        </div>
-      </div>
-      <br></br>
-      <div className="row stat-cards">
-        <div className="col-md-4 col-xl-4">
-          <article className="stat-cards-item">
-            <div className="row">
-
-              <div className="col-md-12 col-xl-12">
-                <div className="stat-cards-info">
-                  <center><h4>Tags</h4><br />
-                  <SearchFilters parentCallback = {this.handleTags.bind(this)} db = {this.props.db} allTags = {this.props.tweetsData.dataTags}/>
-                    
-                  </center>
-                </div>
-              </div>
-
-
-            </div>
-
-          </article>
-        </div>
-
-        <div className="col-md-4 col-xl-4">
-          <article className="stat-cards-item">
-            <div className="row">
-
-              <div className="col-md-12 col-xl-12">
-                <div className="stat-cards-info">
-                  <center><h4>Processed Text</h4><br />
-                  <SearchText parentCallback = {this.handleText.bind(this)} db = {this.props.db}  allText = {this.props.tweetsData.dataText}/>
-                    
-                  </center>
-                </div>
-              </div>
-
-
-            </div>
-
-          </article>
-        </div>
-
-        <div className="col-md-4 col-xl-4">
-          <article className="stat-cards-item">
-            <div className="row">
-
-              <div className="col-md-12 col-xl-12">
-                <div className="stat-cards-info">
-                  <center><h4>Hashtags</h4><br />
-                  <SearchHashtag parentCallback = {this.handleHashtags.bind(this)} db = {this.props.db} allHashtags = {this.props.tweetsData.dataHashtags}/>
-                    
-                  </center>
-                </div>
-              </div>
-
-
-            </div>
-
-          </article>
-        </div>
-
-
-      </div>
-      </>)
+       }
+        return(   
+            renderContent()          
+          )
     }
 }
 
