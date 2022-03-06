@@ -40,6 +40,7 @@ class Filters extends React.Component{
     getSentimentData = (data) => {
 
           
+          
           var negative = 0;
           var positive = 0;
           var neutral = 0;

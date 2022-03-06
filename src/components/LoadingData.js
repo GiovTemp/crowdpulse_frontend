@@ -24,10 +24,12 @@ class Home extends React.Component {
           
       }
       
-      this.getAllData(this.props.db)
+      //this.getAllData(this.props.db)
     }
 
-   
+   componentDidMount(){
+     this.getAllData(this.props.db)
+   }
 
 
     getAllData = (db) => {
@@ -77,9 +79,10 @@ class Home extends React.Component {
         this.state.dataTags = obj4;
         this.state.users = obj5;
 
-        console.log(obj5)
+        
         this.setState({flag:1})    
         this.sendData()    
+        
         
         
 

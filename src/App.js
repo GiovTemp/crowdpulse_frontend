@@ -7,12 +7,11 @@ import WordChart from './components/WordCloud';
 import TimeLines from './components/TimeLines';
 import Maps from './components/Maps';
 import Home from './components/Home';
-import Collection from './components/Collection';
+//import Collection from './components/Collection';
 import Dbs from './components/Dbs';
 import LoadingData from './components/LoadingData';
 import { jsPDF } from "jspdf";
 import  html2canvas  from 'html2canvas';
-
 import React from 'react';
 import PreLoader from './components/preloader';
 

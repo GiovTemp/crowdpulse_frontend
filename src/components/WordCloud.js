@@ -30,7 +30,7 @@ class WordCloud extends React.Component {
     this.setState({data:temp.data})
     this.state.data = temp.data
     this.state.flagWord = temp.typeWord;
-    console.log(temp)
+    
     if(this.state.flagWord===0||this.state.flagWord==='0'){
       this.queryText();
     }else if(this.state.flagWord===1||this.state.flagWord==='1'){
@@ -40,7 +40,7 @@ class WordCloud extends React.Component {
     }
     this.state.flag=1;
     this.setState({flag:1});
-    console.log(this.state.flag)
+    
 
 
   }
@@ -287,7 +287,7 @@ class WordCloud extends React.Component {
         var body;      
         var temp = renderContent();
         var filters;
-        console.log(temp)
+        
         if(temp!==null){
           filters=temp;
         }else{

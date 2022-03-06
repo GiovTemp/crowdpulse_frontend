@@ -1,9 +1,10 @@
-//https://react-leaflet.js.org/docs/start-installation/
-
 import Filters from './Filters/Filters'
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import PreLoader from "./preloader";
+import HeatmapLayer from '../HeatmapLayer';
+
+
 
  
 
@@ -16,7 +17,9 @@ class Maps extends React.Component {
     this.state = {
       data:[],
       markers : [],
-      flag:0
+      flag:0,
+      heatPoints:[],
+      content:0,
 
     }
   }
@@ -40,13 +43,14 @@ class Maps extends React.Component {
       query = () => {
         var i = 0
        
-        var markers = []
+        var markers = [];
+        var heatPoints = [];
         
         
         while(i<this.state.data.length){
           if(this.state.data[i].geo!==undefined){
             
-            console.log(this.state.data[i].geo)
+            
 
             if(this.state.data[i].geo.coordinates!==undefined){
 
@@ -56,6 +60,8 @@ class Maps extends React.Component {
                 text:this.state.data[i].raw_text,
                 author:this.state.data[i].author_username
               })
+
+              heatPoints.push([this.state.data[i].geo.coordinates.latitude,this.state.data[i].geo.coordinates.longitude,100]);
              
             }else{
               //trasformare luoghi in coordinate
@@ -70,43 +76,89 @@ class Maps extends React.Component {
         
         this.setState({markers:markers})
         this.state.markers=markers
+        this.setState({heatPoints:heatPoints});
+        this.state.heatPoints=heatPoints;
 
       
-
+        
         
         
       }
+
+    displayMap = () =>{
+      this.state.content=0;
+      this.setState({content:0});
+    }
+
+    displayHeatMap = () =>{
+      this.state.content=1;
+      this.setState({content:1});
+    }
     
       render () {
         var body;
 
         if(this.state.flag>0){
 
-           body=              <div className="row">
-           <div className="col-lg-12">
-             <div className="chart" id="mapCanvas">
-             <MapContainer center={[41.29246 ,13.5736108]} zoom={6} scrollWheelZoom={false}>
-             {this.state.markers.map((city, idx) => (
-             <Marker
-               position={[city.lat, city.lng]}
-               city = "Rome"
-               key={idx}
-             >
-               <Popup>
-                 <b>
-                   {city.author}, {city.text}
-                 </b>
-               </Popup>
-             </Marker>))}
-                 <TileLayer
-                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          if(this.state.content===0){
+            body=
+            <>
+ 
+ 
+            
+            <div className="row">
+            <div className="col-lg-12">
+              <div className="chart" id="mapCanvas">
+              <Map center={[41.29246 ,13.5736108]} zoom={5} scrollWheelZoom={false}>
+              {this.state.markers.map((city, idx) => (
+              <Marker
+                position={[city.lat, city.lng]}
+                
+                key={idx}
+              >
+                <Popup>
+                  <b>
+                    {city.author}, {city.text}
+                  </b>
+                </Popup>
+              </Marker>))}
+                  <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+ 
+              </Map>
+              </div>
+            </div>
+ 
+          </div>
 
-             </MapContainer>
-             </div>
-           </div>
+          </>
+          }else{
+            body=
+            <>
+ 
+         <div className="row">
+            <div className="col-lg-12">
+              <div className="chart" id="mapCanvas">
+              <Map center={[41.29246 ,13.5736108]} zoom={5}>
+           <HeatmapLayer
+             points={this.state.heatPoints}
+             longitudeExtractor={m => m[1]}
+             latitudeExtractor={m => m[0]}
+             intensityExtractor={m => parseFloat(m[2])} />
+           <TileLayer
+             url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+           />
+         </Map>
+              </div>
+            </div>
+ 
+          </div>
+          </>
+          }
 
-         </div>
+
         }else{
           body=
           <div className="row">
@@ -126,6 +178,9 @@ class Maps extends React.Component {
             <br/>
             <Filters parentCallback = {this.handleQuery.bind(this)} db = {this.props.db}  tweetsData={this.props.allTweetsData}/>
             <br/>
+            <button className='button activeButton' onClick={() => {this.displayMap()}} > Map</button>
+            <button className='button activeButton' onClick={() => {this.displayHeatMap()}} > Heat Map</button>
+            <br/><br/><br/>
             {body}
 
           </div>
